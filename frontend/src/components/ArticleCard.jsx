@@ -15,7 +15,7 @@ const ArticleCard = ({ article, onClick, variant = 'full' }) => {
       onClick={() => onClick(article)}
     >
       {/* IMAGE BOX */}
-      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square md:aspect-[16/10]' : 'aspect-[16/10]'}`}>
+      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square md:aspect-[1.5/1]' : 'aspect-square md:aspect-[2/1]'} flex-shrink-0`}>
         <img
           src={article.image_url}
           alt={article.title}
@@ -30,24 +30,26 @@ const ArticleCard = ({ article, onClick, variant = 'full' }) => {
       </div>
 
       {/* CONTENT BOX */}
-      <div className={`${isCompact ? 'p-3 md:p-6' : 'p-6'} flex flex-col h-full bg-black/40 backdrop-blur-md`}>
-        <div className="flex items-center gap-2 mb-2 md:mb-4">
-          <span className={`${isCompact ? 'text-[8px] md:text-[10px]' : 'text-[10px]'} font-mono text-white/30 uppercase tracking-widest`}>
-            {new Date(article.published_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-          </span>
-          {(!isCompact || window.innerWidth >= 768) && <div className="h-px bg-white/10 flex-grow" />}
+      <div className={`${isCompact ? 'p-3 md:p-6' : 'p-6 md:p-10'} flex flex-col flex-grow bg-black/40 backdrop-blur-md justify-between`}>
+        <div>
+          <div className="flex items-center gap-2 mb-2 md:mb-4">
+            <span className={`${isCompact ? 'text-[8px] md:text-[10px]' : 'text-[10px]'} font-mono text-white/30 uppercase tracking-widest`}>
+              {new Date(article.published_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+            </span>
+            <div className={`h-px bg-white/10 flex-grow ${isCompact ? 'hidden md:block' : 'block'}`} />
+          </div>
+
+          <h3 className={`${isCompact ? 'text-sm md:text-lg' : 'text-xl md:text-3xl'} font-bold mb-2 md:mb-4 tracking-tight group-hover:text-blue-400 transition-colors leading-snug line-clamp-2 md:line-clamp-3`}>
+            {article.title}
+          </h3>
+
+          {/* Hide summary on mobile compact but show on desktop */}
+          <p className={`${isCompact ? 'hidden md:block' : 'block'} text-sm text-white/50 leading-relaxed line-clamp-2 md:line-clamp-3 mb-6 font-medium`}>
+            {article.summary}
+          </p>
         </div>
 
-        <h3 className={`${isCompact ? 'text-sm md:text-xl' : 'text-xl'} font-bold mb-2 tracking-tight group-hover:text-blue-400 transition-colors leading-snug line-clamp-2`}>
-          {article.title}
-        </h3>
-
-        {/* Hide summary on mobile compact but show on desktop */}
-        <p className={`${isCompact ? 'hidden md:block' : 'block'} text-sm text-white/50 leading-relaxed line-clamp-2 mb-6 font-medium`}>
-          {article.summary}
-        </p>
-
-        <div className={`mt-auto ${isCompact ? 'hidden md:flex' : 'flex'} pt-4 items-center justify-between group/btn`}>
+        <div className={`mt-auto ${isCompact ? 'hidden md:flex' : 'flex'} pt-4 items-center justify-between group/btn border-t border-white/5`}>
           <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 group-hover:text-white transition-colors">
             Read Intel
           </span>

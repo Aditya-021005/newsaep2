@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ArticleCard from '../components/ArticleCard';
+import { StatusBlock, NewsletterBlock } from '../components/NewsFillers';
 import ArticleHero from '../components/ArticleHero';
 import ArticleDetail from '../components/ArticleDetail';
 import { motion } from 'framer-motion';
@@ -16,7 +17,6 @@ const NewsPage = () => {
     setLoadingMore(url !== 'http://localhost:8000/api/articles/');
     axios.get(url)
       .then(res => {
-        // Handle paginated response: { count, next, previous, results }
         const newArticles = Array.isArray(res.data) ? res.data : res.data.results;
         const next = res.data.next;
 
@@ -50,7 +50,6 @@ const NewsPage = () => {
       </div>
 
       <div className="container mx-auto px-6 relative">
-        {/* Background Decorative Grid */}
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
         <header className="mb-20 md:mb-32 relative">
@@ -87,7 +86,6 @@ const NewsPage = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-12">
-            {/* HER0 ARTICLE */}
             {articles.length > 0 && (
               <ArticleHero
                 article={articles[0]}
@@ -95,38 +93,61 @@ const NewsPage = () => {
               />
             )}
 
-            {/* MOSAIC GRID */}
-            <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8">
-              {articles.slice(1).map((article, idx) => {
-                // Desktop Spanning (lg:)
-                let desktopSpan = "lg:col-span-4";
-                const desktopCyclePos = idx % 7;
-                if (desktopCyclePos === 0) desktopSpan = "lg:col-span-8";
-                if (desktopCyclePos === 1) desktopSpan = "lg:col-span-4";
-                if (desktopCyclePos >= 2 && desktopCyclePos <= 4) desktopSpan = "lg:col-span-4";
-                if (desktopCyclePos === 5 || desktopCyclePos === 6) desktopSpan = "lg:col-span-6";
+            <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8 auto-rows-fr">
+              {(() => {
+                const items = [];
+                let articleIdx = 0;
+                const totalItems = articles.slice(1).length + 2;
 
-                // Mobile Spanning (default grid-cols-2)
-                // Cycle: Full (col-span-2), Half (col-span-1), Half (col-span-1)
-                const mobileCyclePos = idx % 3;
-                let mobileSpan = "col-span-1";
-                let variant = "compact";
+                for (let i = 0; i < totalItems; i++) {
+                  if (i === 2) {
+                    items.push(
+                      <div key="filler-status" className="col-span-2 lg:col-span-4">
+                        <StatusBlock />
+                      </div>
+                    );
+                    continue;
+                  }
+                  if (i === 6) {
+                    items.push(
+                      <div key="filler-news" className="col-span-2 lg:col-span-4">
+                        <NewsletterBlock />
+                      </div>
+                    );
+                    continue;
+                  }
 
-                if (mobileCyclePos === 0) {
-                  mobileSpan = "col-span-2";
-                  variant = "full";
+                  const article = articles.slice(1)[articleIdx];
+                  if (!article) break;
+
+                  let desktopSpan = "lg:col-span-4";
+                  const desktopCyclePos = articleIdx % 7;
+                  if (desktopCyclePos === 0) desktopSpan = "lg:col-span-8";
+                  else if (desktopCyclePos === 1) desktopSpan = "lg:col-span-4";
+                  else if (desktopCyclePos >= 2 && desktopCyclePos <= 4) desktopSpan = "lg:col-span-4";
+                  else if (desktopCyclePos === 5 || desktopCyclePos === 6) desktopSpan = "lg:col-span-6";
+
+                  const mobileCyclePos = articleIdx % 3;
+                  let mobileSpan = "col-span-1";
+                  let variant = "compact";
+                  if (mobileCyclePos === 0) {
+                    mobileSpan = "col-span-2";
+                    variant = "full";
+                  }
+
+                  items.push(
+                    <div key={article.id} className={`${mobileSpan} ${desktopSpan}`}>
+                      <ArticleCard
+                        article={article}
+                        onClick={setSelectedArticle}
+                        variant={variant}
+                      />
+                    </div>
+                  );
+                  articleIdx++;
                 }
-
-                return (
-                  <div key={article.id} className={`${mobileSpan} ${desktopSpan}`}>
-                    <ArticleCard
-                      article={article}
-                      onClick={setSelectedArticle}
-                      variant={variant}
-                    />
-                  </div>
-                );
-              })}
+                return items;
+              })()}
             </div>
           </div>
         )}
