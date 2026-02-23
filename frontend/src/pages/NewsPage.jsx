@@ -93,42 +93,67 @@ const NewsPage = () => {
             )}
 
             <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8">
-              {articles.slice(1).map((article, idx) => {
-                const posInCycle = idx % 5;
+              {(() => {
+                const slice = articles.slice(1);
+                return slice.map((article, idx) => {
+                  const remaining = slice.length - idx;
+                  const posInCycle = idx % 5;
 
-                // Define spans and height variants
-                let desktopSpan = "lg:col-span-4";
-                let desktopRowSpan = "lg:row-span-1";
-                let mobileSpan = "col-span-1";
-                let variant = "compact";
+                  let desktopSpan = "lg:col-span-4";
+                  let desktopRowSpan = "lg:row-span-1";
+                  let mobileSpan = "col-span-1";
+                  let variant = "compact";
+                  let isTall = false;
 
-                if (posInCycle === 0) { // Big one
-                  desktopSpan = "lg:col-span-8";
-                  desktopRowSpan = "lg:row-span-2";
-                  mobileSpan = "col-span-2";
-                  variant = "full";
-                } else if (posInCycle === 1 || posInCycle === 2) { // Stacking ones
-                  desktopSpan = "lg:col-span-4";
-                  desktopRowSpan = "lg:row-span-1";
-                  mobileSpan = "col-span-1";
-                  variant = "compact";
-                } else if (posInCycle === 3 || posInCycle === 4) { // Balanced half-width
-                  desktopSpan = "lg:col-span-6";
-                  desktopRowSpan = "lg:row-span-1";
-                  mobileSpan = "col-span-2";
-                  variant = "full";
-                }
+                  // Pattern logic
+                  if (posInCycle === 0) {
+                    if (remaining === 1) {
+                      desktopSpan = "lg:col-span-12";
+                      variant = "full";
+                    } else {
+                      desktopSpan = "lg:col-span-8";
+                      desktopRowSpan = "lg:row-span-2";
+                      mobileSpan = "col-span-2";
+                      variant = "full";
+                      isTall = true;
+                    }
+                  } else if (posInCycle === 1) {
+                    desktopSpan = "lg:col-span-4";
+                    desktopRowSpan = "lg:row-span-1";
+                    mobileSpan = "col-span-1";
+                    variant = "compact";
+                  } else if (posInCycle === 2) {
+                    desktopSpan = "lg:col-span-4";
+                    desktopRowSpan = "lg:row-span-1";
+                    mobileSpan = "col-span-1";
+                    variant = "compact";
+                  } else if (posInCycle === 3) {
+                    // Handle logic to avoid blank space if only 1 left in pattern
+                    if (remaining === 1) {
+                      desktopSpan = "lg:col-span-12";
+                    } else {
+                      desktopSpan = "lg:col-span-6";
+                    }
+                    mobileSpan = "col-span-2";
+                    variant = "full";
+                  } else if (posInCycle === 4) {
+                    desktopSpan = "lg:col-span-6";
+                    mobileSpan = "col-span-2";
+                    variant = "full";
+                  }
 
-                return (
-                  <div key={article.id} className={`${mobileSpan} ${desktopSpan} ${desktopRowSpan}`}>
-                    <ArticleCard
-                      article={article}
-                      onClick={setSelectedArticle}
-                      variant={variant}
-                    />
-                  </div>
-                );
-              })}
+                  return (
+                    <div key={article.id} className={`${mobileSpan} ${desktopSpan} ${desktopRowSpan}`}>
+                      <ArticleCard
+                        article={article}
+                        onClick={setSelectedArticle}
+                        variant={variant}
+                        isTall={isTall}
+                      />
+                    </div>
+                  );
+                });
+              })()}
             </div>
           </div>
         )}

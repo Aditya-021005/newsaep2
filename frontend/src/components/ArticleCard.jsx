@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const ArticleCard = ({ article, onClick, variant = 'full' }) => {
+const ArticleCard = ({ article, onClick, variant = 'full', isTall = false }) => {
   const isCompact = variant === 'compact';
 
   return (
@@ -15,7 +15,7 @@ const ArticleCard = ({ article, onClick, variant = 'full' }) => {
       onClick={() => onClick(article)}
     >
       {/* IMAGE BOX */}
-      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square md:aspect-[1.5/1]' : 'aspect-square md:aspect-[2/1]'} flex-shrink-0`}>
+      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square md:aspect-[1.5/1]' : isTall ? 'aspect-[1/1] md:aspect-[4/3]' : 'aspect-square md:aspect-[2/1]'} flex-shrink-0`}>
         <img
           src={article.image_url}
           alt={article.title}
@@ -30,23 +30,41 @@ const ArticleCard = ({ article, onClick, variant = 'full' }) => {
       </div>
 
       {/* CONTENT BOX */}
-      <div className={`${isCompact ? 'p-3 md:p-6' : 'p-6 md:p-10'} flex flex-col flex-grow bg-black/40 backdrop-blur-md justify-between`}>
+      <div className={`${isCompact ? 'p-3 md:p-6' : isTall ? 'p-6 md:p-12' : 'p-6 md:p-10'} flex flex-col flex-grow bg-black/40 backdrop-blur-md justify-between`}>
         <div>
           <div className="flex items-center gap-2 mb-2 md:mb-4">
             <span className={`${isCompact ? 'text-[8px] md:text-[10px]' : 'text-[10px]'} font-mono text-white/30 uppercase tracking-widest`}>
               {new Date(article.published_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
             </span>
             <div className={`h-px bg-white/10 flex-grow ${isCompact ? 'hidden md:block' : 'block'}`} />
+            {isTall && (
+              <span className="text-[9px] font-mono text-blue-500/50 uppercase tracking-widest hidden md:block">
+                // PRIORITY_ACCESS
+              </span>
+            )}
           </div>
 
-          <h3 className={`${isCompact ? 'text-sm md:text-lg' : 'text-xl md:text-3xl'} font-bold mb-2 md:mb-4 tracking-tight group-hover:text-blue-400 transition-colors leading-snug line-clamp-2 md:line-clamp-3`}>
+          <h3 className={`${isCompact ? 'text-sm md:text-lg' : isTall ? 'text-xl md:text-4xl' : 'text-xl md:text-3xl'} font-bold mb-2 md:mb-4 tracking-tight group-hover:text-blue-400 transition-colors leading-tight line-clamp-2 md:line-clamp-3`}>
             {article.title}
           </h3>
 
-          {/* Hide summary on mobile compact but show on desktop */}
-          <p className={`${isCompact ? 'hidden md:block' : 'block'} text-sm text-white/50 leading-relaxed line-clamp-2 md:line-clamp-3 mb-6 font-medium`}>
+          {/* Expanded summary for tall cards */}
+          <p className={`${isCompact ? 'hidden md:block' : 'block'} text-sm text-white/50 leading-relaxed font-medium ${isTall ? 'md:line-clamp-6' : 'line-clamp-2 md:line-clamp-3'} mb-6`}>
             {article.summary}
           </p>
+
+          {isTall && (
+            <div className="hidden md:flex flex-wrap gap-4 mt-8 pt-8 border-t border-white/5">
+              <div className="flex flex-col gap-1">
+                <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Metadata Hash</span>
+                <span className="text-[10px] font-mono text-white/40 uppercase tracking-tighter">0x4F...{article.id}</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Source Authenticity</span>
+                <span className="text-[10px] font-mono text-blue-500 uppercase tracking-tighter font-bold">Encrypted_True</span>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className={`mt-auto ${isCompact ? 'hidden md:flex' : 'flex'} pt-4 items-center justify-between group/btn border-t border-white/5`}>
