@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ArticleCard from '../components/ArticleCard';
-import { StatusBlock, NewsletterBlock } from '../components/NewsFillers';
 import ArticleHero from '../components/ArticleHero';
 import ArticleDetail from '../components/ArticleDetail';
 import { motion } from 'framer-motion';
