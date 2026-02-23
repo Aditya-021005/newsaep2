@@ -11,11 +11,11 @@ const ArticleCard = ({ article, onClick, variant = 'full' }) => {
       viewport={{ once: true }}
       whileHover={{ y: -5 }}
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className={`premium-card group cursor-pointer flex flex-col h-full overflow-hidden ${isCompact ? 'rounded-2xl' : 'rounded-3xl'}`}
+      className={`premium-card group cursor-pointer flex flex-col h-full overflow-hidden ${isCompact ? 'rounded-2xl md:rounded-3xl' : 'rounded-3xl'}`}
       onClick={() => onClick(article)}
     >
       {/* IMAGE BOX */}
-      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square' : 'aspect-[16/10]'}`}>
+      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square md:aspect-[16/10]' : 'aspect-[16/10]'}`}>
         <img
           src={article.image_url}
           alt={article.title}
@@ -30,23 +30,22 @@ const ArticleCard = ({ article, onClick, variant = 'full' }) => {
       </div>
 
       {/* CONTENT BOX */}
-      <div className={`${isCompact ? 'p-3 md:p-4' : 'p-6'} flex flex-col flex-grow bg-black/40 backdrop-blur-md`}>
+      <div className={`${isCompact ? 'p-3 md:p-6' : 'p-6'} flex flex-col h-full bg-black/40 backdrop-blur-md`}>
         <div className="flex items-center gap-2 mb-2 md:mb-4">
-          <span className={`${isCompact ? 'text-[8px]' : 'text-[10px]'} font-mono text-white/30 uppercase tracking-widest`}>
+          <span className={`${isCompact ? 'text-[8px] md:text-[10px]' : 'text-[10px]'} font-mono text-white/30 uppercase tracking-widest`}>
             {new Date(article.published_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
           </span>
-          {!isCompact && <div className="h-px bg-white/10 flex-grow" />}
+          {(!isCompact || window.innerWidth >= 768) && <div className="h-px bg-white/10 flex-grow" />}
         </div>
 
-        <h3 className={`${isCompact ? 'text-sm' : 'text-xl'} font-bold mb-2 tracking-tight group-hover:text-blue-400 transition-colors leading-snug line-clamp-2`}>
+        <h3 className={`${isCompact ? 'text-sm md:text-xl' : 'text-xl'} font-bold mb-2 tracking-tight group-hover:text-blue-400 transition-colors leading-snug line-clamp-2`}>
           {article.title}
         </h3>
 
-        {!isCompact && (
-          <p className="text-sm text-white/50 leading-relaxed line-clamp-2 mb-6 font-medium">
-            {article.summary}
-          </p>
-        )}
+        {/* Hide summary on mobile compact but show on desktop */}
+        <p className={`${isCompact ? 'hidden md:block' : 'block'} text-sm text-white/50 leading-relaxed line-clamp-2 mb-6 font-medium`}>
+          {article.summary}
+        </p>
 
         <div className={`mt-auto ${isCompact ? 'hidden md:flex' : 'flex'} pt-4 items-center justify-between group/btn`}>
           <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 group-hover:text-white transition-colors">
