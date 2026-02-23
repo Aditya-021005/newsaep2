@@ -8,17 +8,31 @@ const NewsPage = () => {
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [nextPage, setNextPage] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  useEffect(() => {
-    axios.get('http://localhost:8000/api/articles/')
+  const fetchArticles = (url = 'http://localhost:8000/api/articles/') => {
+    setLoadingMore(url !== 'http://localhost:8000/api/articles/');
+    axios.get(url)
       .then(res => {
-        setArticles(res.data);
+        // Handle paginated response: { count, next, previous, results }
+        const newArticles = Array.isArray(res.data) ? res.data : res.data.results;
+        const next = res.data.next;
+
+        setArticles(prev => url === 'http://localhost:8000/api/articles/' ? newArticles : [...prev, ...newArticles]);
+        setNextPage(next);
         setLoading(false);
+        setLoadingMore(false);
       })
       .catch(err => {
         console.error(err);
         setLoading(false);
+        setLoadingMore(false);
       });
+  };
+
+  useEffect(() => {
+    fetchArticles();
   }, []);
 
   return (
@@ -79,26 +93,41 @@ const NewsPage = () => {
           </div>
         )}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="mt-32 p-20 glass-panel rounded-3xl flex flex-col items-center text-center gap-8 relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
-          <h2 className="text-3xl font-bold tracking-tight">End of Index</h2>
-          <p className="max-w-md text-white/50 text-sm leading-relaxed">
-            You have reached the end of the current briefing. Initialize deep scan for legacy records or check back for live updates.
-          </p>
-          <button className="premium-button mt-4">
-            Reload Archives
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 2v6h-6"></path>
-              <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
-              <path d="M3 22v-6h6"></path>
-              <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
-            </svg>
-          </button>
-        </motion.div>
+        {nextPage ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="mt-32 p-20 glass-panel rounded-3xl flex flex-col items-center text-center gap-8 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
+            <h2 className="text-3xl font-bold tracking-tight">Expand Index</h2>
+            <p className="max-w-md text-white/50 text-sm leading-relaxed">
+              Additional intelligence clusters detected. Synchronize for deeper archival immersion.
+            </p>
+            <button
+              onClick={() => fetchArticles(nextPage)}
+              disabled={loadingMore}
+              className="premium-button mt-4"
+            >
+              {loadingMore ? "Synchronizing..." : "Load More Archives"}
+              {!loadingMore && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+                </svg>
+              )}
+            </button>
+          </motion.div>
+        ) : !loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="mt-32 p-12 text-center"
+          >
+            <p className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/20">
+              End of Archival Stream // All Intelligence Synchronized
+            </p>
+          </motion.div>
+        )}
       </div>
 
       <ArticleDetail
