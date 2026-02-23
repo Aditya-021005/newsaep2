@@ -92,61 +92,43 @@ const NewsPage = () => {
               />
             )}
 
-            <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8 auto-rows-fr">
-              {(() => {
-                const items = [];
-                let articleIdx = 0;
-                const totalItems = articles.slice(1).length + 2;
+            <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8">
+              {articles.slice(1).map((article, idx) => {
+                const posInCycle = idx % 5;
 
-                for (let i = 0; i < totalItems; i++) {
-                  if (i === 2) {
-                    items.push(
-                      <div key="filler-status" className="col-span-2 lg:col-span-4">
-                        <StatusBlock />
-                      </div>
-                    );
-                    continue;
-                  }
-                  if (i === 6) {
-                    items.push(
-                      <div key="filler-news" className="col-span-2 lg:col-span-4">
-                        <NewsletterBlock />
-                      </div>
-                    );
-                    continue;
-                  }
+                // Define spans and height variants
+                let desktopSpan = "lg:col-span-4";
+                let desktopRowSpan = "lg:row-span-1";
+                let mobileSpan = "col-span-1";
+                let variant = "compact";
 
-                  const article = articles.slice(1)[articleIdx];
-                  if (!article) break;
-
-                  let desktopSpan = "lg:col-span-4";
-                  const desktopCyclePos = articleIdx % 7;
-                  if (desktopCyclePos === 0) desktopSpan = "lg:col-span-8";
-                  else if (desktopCyclePos === 1) desktopSpan = "lg:col-span-4";
-                  else if (desktopCyclePos >= 2 && desktopCyclePos <= 4) desktopSpan = "lg:col-span-4";
-                  else if (desktopCyclePos === 5 || desktopCyclePos === 6) desktopSpan = "lg:col-span-6";
-
-                  const mobileCyclePos = articleIdx % 3;
-                  let mobileSpan = "col-span-1";
-                  let variant = "compact";
-                  if (mobileCyclePos === 0) {
-                    mobileSpan = "col-span-2";
-                    variant = "full";
-                  }
-
-                  items.push(
-                    <div key={article.id} className={`${mobileSpan} ${desktopSpan}`}>
-                      <ArticleCard
-                        article={article}
-                        onClick={setSelectedArticle}
-                        variant={variant}
-                      />
-                    </div>
-                  );
-                  articleIdx++;
+                if (posInCycle === 0) { // Big one
+                  desktopSpan = "lg:col-span-8";
+                  desktopRowSpan = "lg:row-span-2";
+                  mobileSpan = "col-span-2";
+                  variant = "full";
+                } else if (posInCycle === 1 || posInCycle === 2) { // Stacking ones
+                  desktopSpan = "lg:col-span-4";
+                  desktopRowSpan = "lg:row-span-1";
+                  mobileSpan = "col-span-1";
+                  variant = "compact";
+                } else if (posInCycle === 3 || posInCycle === 4) { // Balanced half-width
+                  desktopSpan = "lg:col-span-6";
+                  desktopRowSpan = "lg:row-span-1";
+                  mobileSpan = "col-span-2";
+                  variant = "full";
                 }
-                return items;
-              })()}
+
+                return (
+                  <div key={article.id} className={`${mobileSpan} ${desktopSpan} ${desktopRowSpan}`}>
+                    <ArticleCard
+                      article={article}
+                      onClick={setSelectedArticle}
+                      variant={variant}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
