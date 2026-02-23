@@ -96,22 +96,33 @@ const NewsPage = () => {
             )}
 
             {/* MOSAIC GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 md:gap-8">
               {articles.slice(1).map((article, idx) => {
-                // Optimized 7-item cycle for perfectly balanced rows
-                let spanClass = "lg:col-span-4";
-                const cyclePos = idx % 7;
+                // Desktop Spanning (lg:)
+                let desktopSpan = "lg:col-span-4";
+                const desktopCyclePos = idx % 7;
+                if (desktopCyclePos === 0) desktopSpan = "lg:col-span-8";
+                if (desktopCyclePos === 1) desktopSpan = "lg:col-span-4";
+                if (desktopCyclePos >= 2 && desktopCyclePos <= 4) desktopSpan = "lg:col-span-4";
+                if (desktopCyclePos === 5 || desktopCyclePos === 6) desktopSpan = "lg:col-span-6";
 
-                if (cyclePos === 0) spanClass = "lg:col-span-8"; // Row 1 Start (8)
-                if (cyclePos === 1) spanClass = "lg:col-span-4"; // Row 1 End (4)
-                if (cyclePos >= 2 && cyclePos <= 4) spanClass = "lg:col-span-4"; // Row 2 (4+4+4)
-                if (cyclePos === 5 || cyclePos === 6) spanClass = "lg:col-span-6"; // Row 3 (6+6)
+                // Mobile Spanning (default grid-cols-2)
+                // Cycle: Full (col-span-2), Half (col-span-1), Half (col-span-1)
+                const mobileCyclePos = idx % 3;
+                let mobileSpan = "col-span-1";
+                let variant = "compact";
+
+                if (mobileCyclePos === 0) {
+                  mobileSpan = "col-span-2";
+                  variant = "full";
+                }
 
                 return (
-                  <div key={article.id} className={spanClass}>
+                  <div key={article.id} className={`${mobileSpan} ${desktopSpan}`}>
                     <ArticleCard
                       article={article}
                       onClick={setSelectedArticle}
+                      variant={variant}
                     />
                   </div>
                 );

@@ -78,15 +78,37 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* MOBILE OVERLAY MENU */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute top-4 left-6 right-6 glass-panel rounded-3xl p-8 flex flex-col gap-6 md:hidden z-40 bg-black/90 pt-20"
+              className="absolute top-4 left-6 right-6 glass-panel rounded-3xl p-8 flex flex-col gap-6 md:hidden z-40 bg-black/95 pt-16 shadow-2xl border border-white/10"
             >
+              {/* PREMIUM CLOSE BUTTON */}
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsMenuOpen(false)}
+                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600/20 hover:border-blue-500/50 transition-all duration-300 group/close shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+              >
+                <div className="absolute inset-0 rounded-full bg-blue-500/0 group-hover/close:bg-blue-500/10 blur-xl transition-all duration-500" />
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="relative z-10 text-white/70 group-hover/close:text-blue-400 transition-colors"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </motion.button>
+
               <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
                   <Link

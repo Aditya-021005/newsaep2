@@ -27,17 +27,17 @@ const ArticleHero = ({ article, onClick }) => {
       <div className="absolute inset-0 border border-white/10 rounded-3xl pointer-events-none" />
 
       {/* Content */}
-      <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 flex flex-col items-start gap-4 md:gap-6">
+      <div className="absolute bottom-0 left-0 w-full p-6 md:p-16 flex flex-col items-start gap-3 md:gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="flex items-center gap-4"
+          className="flex items-center gap-3 md:gap-4"
         >
-          <span className="px-4 py-1.5 text-[10px] font-black tracking-[0.3em] uppercase bg-blue-600 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+          <span className="px-3 py-1 md:px-4 md:py-1.5 text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase bg-blue-600 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.4)]">
             FEATURED_INTEL
           </span>
-          <span className="text-[10px] font-mono text-white/50 uppercase tracking-[0.2em]">
+          <span className="text-[8px] md:text-[10px] font-mono text-white/50 uppercase tracking-[0.2em]">
             // {new Date(article.published_date).toLocaleDateString()}
           </span>
         </motion.div>
@@ -46,7 +46,7 @@ const ArticleHero = ({ article, onClick }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.9] max-w-4xl"
+          className="text-3xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.95] md:leading-[0.9] max-w-4xl"
         >
           {article.title}
         </motion.h2>
@@ -55,7 +55,7 @@ const ArticleHero = ({ article, onClick }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-base md:text-xl text-white/70 max-w-2xl leading-relaxed font-medium line-clamp-3 md:line-clamp-none"
+          className="text-sm md:text-xl text-white/70 max-w-2xl leading-relaxed font-medium line-clamp-3 md:line-clamp-none"
         >
           {article.summary}
         </motion.p>
@@ -64,15 +64,15 @@ const ArticleHero = ({ article, onClick }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mt-4 flex items-center gap-6 group/btn"
+          className="mt-2 md:mt-4 flex items-center gap-4 md:gap-6 group/btn"
         >
-          <span className="text-xs font-bold tracking-[0.4em] uppercase text-white/60 group-hover:text-white transition-colors">
+          <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase text-white/60 group-hover:text-white transition-colors">
             Access Full Archive
           </span>
-          <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:scale-110">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:scale-110">
             <svg
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
