@@ -37,42 +37,40 @@ const NewsPage = () => {
 
   return (
     <div className="min-h-screen pt-32 pb-20">
-      {/* MARQUEE */}
-      <div className="w-full bg-white/5 border-y border-white/5 overflow-hidden mb-20 backdrop-blur-sm">
-        <div className="animate-monolith-marquee py-3 flex items-center">
-          {[1, 2, 3, 4, 1, 2, 3, 4].map((i, idx) => (
-            <span key={idx} className="marquee-item whitespace-nowrap">
-              AEP_INTEL_FEED // PRIORITY_DATA_STREAM // GLOBAL_ARCHIVE_ACCESS // V4.0_MODERN_CORE
-            </span>
-          ))}
-        </div>
-      </div>
 
       <div className="container mx-auto px-6 relative">
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        {/* TREASURE MAP PATTERN (Replacing modern grid) */}
+        <div
+          className="absolute inset-0 -z-10 opacity-[0.03]"
+          style={{
+            backgroundImage: `radial-gradient(#d4af37 0.5px, transparent 0.5px)`,
+            backgroundSize: '40px 40px',
+            maskImage: 'radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%)'
+          }}
+        />
 
-        <header className="mb-20 md:mb-32 relative">
+        <header className="mb-20 md:mb-32 relative flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="max-w-4xl"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-bold tracking-tighter mb-8 leading-[0.9] glow-text break-words">
-              THE<br />ARCHIVE<span className="text-blue-600">.</span>
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tighter mb-8 leading-none glow-text font-pirate text-[#d4af37]">
+              THE PIRATE'S MAP<span className="text-[#f5deb3]">.</span>
             </h1>
             <div className="flex items-center gap-4 md:gap-6">
-              <div className="h-px bg-blue-600 w-8 md:w-12" />
-              <p className="text-[8px] md:text-[10px] font-bold tracking-[0.4em] uppercase text-white/40">
-                Verified Intelligence Stream
+              <div className="h-px bg-[#d4af37] w-8 md:w-12" />
+              <p className="text-[8px] md:text-[10px] font-bold tracking-[0.4em] uppercase text-[#f5deb3]/40">
+                Tales of the High Seas // Recorded Booty
               </p>
             </div>
           </motion.div>
 
-          <div className="absolute top-0 right-0 hidden lg:block">
-            <div className="glass-panel p-6 rounded-2xl flex flex-col gap-4 text-center">
-              <span className="text-4xl font-black text-blue-500">AEP</span>
-              <div className="h-px bg-white/10" />
-              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Sys_Node_01</span>
+          <div className="hidden lg:block shrink-0 mb-4">
+            <div className="glass-panel p-6 rounded-sm flex flex-col gap-4 text-center border-[#d4af37]/30">
+              <span className="text-4xl font-black text-[#d4af37] font-pirate uppercase">AEP</span>
+              <div className="h-px bg-[#d4af37]/10" />
+              <span className="text-[10px] font-mono text-[#f5deb3]/30 uppercase tracking-widest">Vessel_Node_77</span>
             </div>
           </div>
         </header>
@@ -162,19 +160,19 @@ const NewsPage = () => {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="mt-32 p-20 glass-panel rounded-3xl flex flex-col items-center text-center gap-8 relative overflow-hidden"
+            className="mt-32 p-20 glass-panel rounded-sm flex flex-col items-center text-center gap-8 relative overflow-hidden bg-[#1a120b]/40"
           >
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
-            <h2 className="text-3xl font-bold tracking-tight">Expand Index</h2>
-            <p className="max-w-md text-white/50 text-sm leading-relaxed">
-              Additional intelligence clusters detected. Synchronize for deeper archival immersion.
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
+            <h2 className="text-4xl font-bold tracking-tight text-[#d4af37] font-pirate">Seek More Treasures</h2>
+            <p className="max-w-md text-[#f5deb3]/50 text-sm leading-relaxed">
+              Distant islands detected on the horizon. Signal the crew to uncover further plunder.
             </p>
             <button
               onClick={() => fetchArticles(nextPage)}
               disabled={loadingMore}
               className="premium-button mt-4"
             >
-              {loadingMore ? "Synchronizing..." : "Load More Archives"}
+              {loadingMore ? "Sailing..." : "Seek More Treasures"}
               {!loadingMore && (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
@@ -188,8 +186,8 @@ const NewsPage = () => {
             whileInView={{ opacity: 1 }}
             className="mt-32 p-12 text-center"
           >
-            <p className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/20">
-              End of Archival Stream // All Intelligence Synchronized
+            <p className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#d4af37]/20">
+              End of the Map // All Plunder Claimed
             </p>
           </motion.div>
         )}

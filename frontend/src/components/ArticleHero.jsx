@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import SmallCompass3D from './SmallCompass3D';
 
 const ArticleHero = ({ article, onClick }) => {
   if (!article) return null;
@@ -34,10 +35,10 @@ const ArticleHero = ({ article, onClick }) => {
           transition={{ delay: 0.3 }}
           className="flex items-center gap-3 md:gap-4"
         >
-          <span className="px-3 py-1 md:px-4 md:py-1.5 text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase bg-blue-600 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.4)]">
-            FEATURED_INTEL
+          <span className="px-3 py-1 md:px-4 md:py-1.5 text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase bg-[#d4af37] text-[#120c08] rounded-sm shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+            CAPTAIN'S LOG
           </span>
-          <span className="text-[8px] md:text-[10px] font-mono text-white/50 uppercase tracking-[0.2em]">
+          <span className="text-[8px] md:text-[10px] font-mono text-[#f5deb3]/50 uppercase tracking-[0.2em]">
             // {new Date(article.published_date).toLocaleDateString()}
           </span>
         </motion.div>
@@ -46,7 +47,7 @@ const ArticleHero = ({ article, onClick }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-3xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.95] md:leading-[0.9] max-w-4xl"
+          className="text-3xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-[#f5deb3] leading-[0.95] md:leading-[0.9] max-w-4xl font-pirate"
         >
           {article.title}
         </motion.h2>
@@ -55,7 +56,7 @@ const ArticleHero = ({ article, onClick }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-sm md:text-xl text-white/70 max-w-2xl leading-relaxed font-medium line-clamp-3 md:line-clamp-none"
+          className="text-sm md:text-xl text-[#f5deb3]/70 max-w-2xl leading-relaxed font-medium line-clamp-3 md:line-clamp-none font-garamond"
         >
           {article.summary}
         </motion.p>
@@ -66,33 +67,39 @@ const ArticleHero = ({ article, onClick }) => {
           transition={{ delay: 0.6 }}
           className="mt-2 md:mt-4 flex items-center gap-4 md:gap-6 group/btn"
         >
-          <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase text-white/60 group-hover:text-white transition-colors">
-            Access Full Archive
+          <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase text-[#f5deb3]/60 group-hover:text-[#d4af37] transition-colors">
+            Claim the Loot
           </span>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:scale-110">
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-sm border border-[#d4af37]/20 flex items-center justify-center transition-all duration-500 group-hover:bg-[#d4af37] group-hover:border-[#d4af37] group-hover:rotate-[360deg] group-hover:scale-110">
             <svg
-              width="20"
-              height="20"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-white"
+              className="text-[#f5deb3] group-hover:text-[#120c08]"
             >
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
+              {/* Anchor icon */}
+              <path d="M12 5V21" />
+              <path d="M5 12H2V12C2 16.5 5.5 20 10 21H14C18.5 20 22 16.5 22 12H19" />
+              <circle cx="12" cy="5" r="3" />
             </svg>
           </div>
         </motion.div>
       </div>
 
       {/* Decorative Elements */}
-      <div className="absolute top-8 right-8 flex flex-col items-end opacity-20">
-        <span className="text-4xl font-black text-white decoration-blue-600 underline decoration-4 underline-offset-8">AEP</span>
-        <span className="text-[8px] font-mono text-white mt-4 uppercase tracking-[0.5em]">Global_Network_Sync</span>
+      <div className="absolute top-8 right-8 flex flex-col items-end opacity-40">
+        <SmallCompass3D />
+        <span className="text-4xl font-black text-[#d4af37] font-pirate decoration-[#d4af37] underline decoration-2 underline-offset-8 uppercase">AEP</span>
+        <span className="text-[8px] font-mono text-[#f5deb3] mt-4 uppercase tracking-[0.5em]">Dread_Pirate_Comm</span>
       </div>
+
+      {/* Burnt edge gradient */}
+      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_150px_rgba(0,0,0,0.8)]" />
     </motion.div>
   );
 };

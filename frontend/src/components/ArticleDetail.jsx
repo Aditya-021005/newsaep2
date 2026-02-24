@@ -23,7 +23,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
             {/* CLOSE BUTTON */}
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-all active:scale-90"
+              className="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-white/5 border border-[#d4af37]/20 text-[#f5deb3] flex items-center justify-center hover:bg-[#d4af37]/20 hover:border-[#d4af37]/40 transition-all active:scale-90"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -40,11 +40,11 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
               />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40 md:to-transparent" />
               <div className="absolute bottom-12 left-12 right-12 hidden md:block">
-                <span className="premium-label mb-4">
-                  {article.category}
+                <span className="px-3 py-1 bg-[#d4af37] text-[#120c08] text-[9px] font-black tracking-[.3em] uppercase rounded-sm mb-4">
+                  {article.category || 'BOUNTY'}
                 </span>
-                <div className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em] mt-4">
-                  Secured_Archival_Node
+                <div className="text-[10px] font-mono text-[#d4af37]/40 uppercase tracking-[0.3em] mt-4">
+                  BITS_PILANI_ARCHIVES
                 </div>
               </div>
             </div>
@@ -52,12 +52,12 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
             {/* CONTENT AREA */}
             <div className="w-full md:w-7/12 p-8 md:p-16 overflow-y-auto custom-scrollbar">
               <div className="flex items-center gap-4 mb-8">
-                <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-blue-500">Intel Report</span>
-                <div className="h-px bg-white/10 flex-grow" />
-                <span className="text-[10px] font-mono text-white/30">{new Date(article.published_date).toLocaleDateString()}</span>
+                <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#d4af37]">Article Ledger</span>
+                <div className="h-px bg-[#d4af37]/10 flex-grow" />
+                <span className="text-[10px] font-mono text-[#f5deb3]/30 tracking-widest">{new Date(article.published_date).toLocaleDateString()}</span>
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-bold mb-10 leading-tight tracking-tight">
+              <h1 className="text-4xl md:text-6xl font-bold mb-10 leading-tight tracking-tight font-pirate text-[#d4af37] glow-text">
                 {article.title}
               </h1>
 
@@ -70,13 +70,14 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                   {article.content}
                 </p>
 
-                <div className="mt-16 p-8 rounded-2xl bg-blue-600/5 border border-blue-500/10 flex flex-col gap-4">
+                <div className="mt-16 p-8 rounded-sm bg-[#d4af37]/5 border border-[#d4af37]/10 flex flex-col gap-4 relative overflow-hidden group">
+                  <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_50px_rgba(0,0,0,0.5)] opacity-50" />
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-blue-400">Archival Protocol 4.0</span>
+                    <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_10px_#d4af37]" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#d4af37]">Pirate's Code 4.0</span>
                   </div>
-                  <p className="text-xs text-blue-400/60 leading-relaxed">
-                    This document is encrypted and stored within the Monolith Core. Unauthorized distribution of this data is subject to digital audit.
+                  <p className="text-xs text-[#f5deb3]/60 leading-relaxed font-garamond italic">
+                    "Every man has a vote in affairs of moment; has equal title to the fresh provisions, or strong liquors, at any time seized, and may use them at pleasure."
                   </p>
                 </div>
               </div>

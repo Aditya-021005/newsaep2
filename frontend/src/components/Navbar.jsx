@@ -18,19 +18,19 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: 'News', path: '/news' },
-    { name: 'Manifesto', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Articles', path: '/news' },
+    { name: 'The Team', path: '/about' },
+    { name: 'Parley', path: '/contact' },
   ];
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled || isMenuOpen ? 'py-4' : 'py-6'}`}>
       <div className="container mx-auto px-6">
-        <div className={`glass-panel flex items-center justify-between px-6 md:px-8 h-12 rounded-full transition-all duration-300 ${isScrolled || isMenuOpen ? 'bg-black/60 shadow-blue-500/10' : 'bg-white/5'}`}>
+        <div className={`glass-panel flex items-center justify-between px-6 md:px-8 h-12 rounded-sm transition-all duration-300 ${isScrolled || isMenuOpen ? 'bg-[#1a120b]/80 shadow-amber-900/10' : 'bg-[#1a120b]/20'}`}>
           {/* LOGO */}
           <Link to="/news" className="flex items-center group relative z-50">
-            <span className="text-white font-bold text-lg tracking-tight transition-transform group-hover:scale-105">
-              AEP<span className="text-blue-500">NEWS</span>
+            <span className="text-[#f5deb3] font-bold text-2xl tracking-tight transition-transform group-hover:scale-105 font-pirate">
+              AEP<span className="text-[#d4af37]">BUCCANEER</span>
             </span>
           </Link>
 
@@ -40,9 +40,9 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${location.pathname === link.path
-                  ? 'bg-blue-600'
-                  : 'hover:bg-white/10 text-white/70 hover:text-white'
+                className={`px-4 py-1.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all duration-300 ${location.pathname === link.path
+                  ? 'bg-[#d4af37] text-[#120c08]'
+                  : 'hover:bg-[#d4af37]/10 text-[#f5deb3]/70 hover:text-[#f5deb3]'
                   }`}
               >
                 {link.name}
@@ -52,9 +52,9 @@ const Navbar = () => {
 
           {/* DESKTOP STATUS */}
           <div className="hidden md:flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-medium text-white/40 tracking-widest uppercase">
-              System Active
+            <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_10px_#d4af37]" />
+            <span className="text-[10px] font-bold text-[#d4af37]/40 tracking-[0.3em] uppercase">
+              Sails Hoisted
             </span>
           </div>
 
@@ -91,9 +91,9 @@ const Navbar = () => {
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsMenuOpen(false)}
-                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600/20 hover:border-blue-500/50 transition-all duration-300 group/close shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all duration-300 group/close shadow-[0_0_20px_rgba(0,0,0,0.5)]"
               >
-                <div className="absolute inset-0 rounded-full bg-blue-500/0 group-hover/close:bg-blue-500/10 blur-xl transition-all duration-500" />
+                <div className="absolute inset-0 rounded-full bg-[#d4af37]/0 group-hover/close:bg-[#d4af37]/10 blur-xl transition-all duration-500" />
                 <svg
                   width="24"
                   height="24"
@@ -103,7 +103,7 @@ const Navbar = () => {
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="relative z-10 text-white/70 group-hover/close:text-blue-400 transition-colors"
+                  className="relative z-10 text-white/70 group-hover/close:text-[#d4af37] transition-colors"
                 >
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
@@ -114,9 +114,9 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`px-6 py-4 rounded-2xl text-lg font-bold transition-all ${location.pathname === link.path
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white/5 text-white/70 shadow-inner'
+                    className={`px-6 py-4 rounded-2xl text-lg font-bold transition-all font-pirate tracking-widest ${location.pathname === link.path
+                      ? 'bg-[#d4af37] text-[#120c08] shadow-[0_0_20px_rgba(212,175,55,0.4)]'
+                      : 'bg-white/5 text-[#f5deb3]/70 shadow-inner hover:bg-[#d4af37]/10'
                       }`}
                   >
                     {link.name}
@@ -127,8 +127,8 @@ const Navbar = () => {
               <div className="mt-4 pt-8 border-t border-white/10 flex items-center justify-between">
                 <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/20">System Status</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                  <span className="text-[10px] font-bold uppercase text-blue-500">Active</span>
+                  <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_10px_#d4af37]" />
+                  <span className="text-[10px] font-bold uppercase text-[#d4af37]">Active Voyage</span>
                 </div>
               </div>
             </motion.div>
