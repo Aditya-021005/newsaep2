@@ -124,7 +124,7 @@ const AboutPage = () => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:8001/api/members/')
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/members/`)
       .then(res => {
         const grouped = res.data.reduce((acc, member) => {
           const display = member.role ? `${member.name} (${member.role})` : member.name;

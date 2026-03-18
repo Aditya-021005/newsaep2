@@ -6,7 +6,7 @@ const Footer = () => {
   const [headlines, setHeadlines] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8001/api/articles/')
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/articles/`)
       .then(res => {
         const articles = Array.isArray(res.data) ? res.data : res.data.results;
         setHeadlines((articles || []).slice(0, 8).map(a => a.title));
