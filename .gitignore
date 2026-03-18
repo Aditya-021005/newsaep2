@@ -24,6 +24,7 @@ backend/venv/
 backend/.env
 venv/
 .env
+frontend/.env.production
 
 # Node
 frontend/node_modules/
