@@ -25,8 +25,13 @@ SECRET_KEY = 'django-insecure-=c7u-y%fble-9406&f0kgh-%or6*thlw+mhd1ewh-#h@sx+)7#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '13.62.76.2',
+    'aditya.pe',
+    'www.aditya.pe',
+]
 
 # Application definition
 
@@ -124,7 +129,17 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://13.62.76.2',
+    'https://13.62.76.2',
+    'http://aditya.pe',
+    'https://aditya.pe',
+    'http://www.aditya.pe',
+    'https://www.aditya.pe',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
