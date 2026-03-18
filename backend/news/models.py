@@ -4,7 +4,8 @@ class Article(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
-    image_url = models.URLField(max_length=500, blank=True)
+    image_url = models.URLField(max_length=500, blank=True, null=True)
+    image_file = models.ImageField(upload_to='articles/', blank=True, null=True)
     summary = models.CharField(max_length=500, blank=True)
     category = models.CharField(max_length=100, default='Trending')
 
@@ -19,3 +20,11 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name}"
+
+class Member(models.Model):
+    name = models.CharField(max_length=255)
+    year = models.CharField(max_length=4)
+    role = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.year})"

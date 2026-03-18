@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import './App.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -6,70 +7,147 @@ import LoadingPage from './pages/LoadingPage';
 import NewsPage from './pages/NewsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-import Pirate3D from './components/Pirate3D';
-import { AnimatePresence } from 'framer-motion';
+import PageTransition from './components/PageTransition';
+import BackToTop from './components/BackToTop';
+import Sidebar from './components/Sidebar';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import CustomCursor from './components/CustomCursor';
 
 const AppContent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const isLanding = location.pathname === '/';
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [hasMoved, setHasMoved] = useState(false);
+
+  // SEARCH HANDLERS
+  const handleSidebarSearch = (query) => {
+    navigate(`/news?search=${encodeURIComponent(query)}`);
+  };
+
+  const handleSidebarCategory = (category) => {
+    if (category) navigate(`/news?category=${encodeURIComponent(category)}`);
+    else navigate('/news');
+  };
+
+  // 1. Disable browser scroll restoration to prevent "halfway" jumping
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
 
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setMousePos({ x, y });
+      if (!hasMoved) setHasMoved(true);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // 2. Aggressive staggered scroll reset on route change
+  useEffect(() => {
+    const scrollResets = [0, 100, 450]; // Immediate, Mid-transition, Post-transition (0.4s)
+
+    const timers = scrollResets.map(delay =>
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTo(0, 0);
+        document.body.scrollTo(0, 0);
+      }, delay)
+    );
+
+    return () => timers.forEach(clearTimeout);
+  }, [location.pathname, searchParams.toString()]); // Also reset on search change
+
+  /* Global canvas is always mounted to prevent transition resets */
   return (
-    <div className="min-h-screen bg-[#120c08] text-[#f5deb3] selection:bg-amber-900/40 selection:text-white">
-      {/* 3D BACKGROUND LAYER */}
-      <Pirate3D />
+    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black overflow-x-hidden">
 
-      {/* TREASURE MAP BACKGROUND */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-amber-600/10 blur-[120px] rounded-full" />
-        <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] bg-blue-900/10 blur-[100px] rounded-full" />
+      {/* ── FILM GRAIN OVERLAY ──────────────────────────────────── */}
+      <div className="noir-grain" />
 
-        {/* Map Lines */}
-        <div
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 50h100M50 0v100' fill='none' stroke='%23d4af37' stroke-width='0.5' stroke-dasharray='5,5'/%3E%3Cellipse cx='50' cy='50' rx='40' ry='30' fill='none' stroke='%23d4af37' stroke-width='0.2'/%3E%3C/svg%3E")`,
-            backgroundSize: '300px 300px'
-          }}
-        />
+      {/* ── CUSTOM CURSOR ───────────────────────────────────────── */}
+      <CustomCursor />
 
-        {/* Compass Rose Decoration */}
-        <div className="absolute top-[15%] right-[10%] w-64 h-64 opacity-[0.03] rotate-12">
-          <svg viewBox="0 0 100 100" fill="none" stroke="#d4af37" strokeWidth="0.5">
-            <circle cx="50" cy="50" r="45" />
-            <path d="M50 5 L55 45 L95 50 L55 55 L50 95 L45 55 L5 50 L45 45 Z" />
-            <circle cx="50" cy="50" r="2" fill="#d4af37" />
-          </svg>
-        </div>
+      {/* ── SIDEBAR ───────────────────────────────────────────── */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onSearch={handleSidebarSearch}
+        currentCategory={searchParams.get('category')}
+        onCategoryChange={handleSidebarCategory}
+      />
+
+      <div
+        className="fixed inset-0 z-0 bg-black pointer-events-none overflow-hidden transition-opacity duration-1000"
+        style={{
+          background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, rgba(255,255,255,0.03) 0%, transparent 50%)`,
+          opacity: hasMoved ? 1 : 0
+        }}
+      >
+        <div className="absolute inset-0 opacity-20"
+          style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '100px 100px' }} />
       </div>
 
-      {!isLanding && <Navbar />}
+      {/* ── NAVBAR ───────────────────────────────────────────── */}
+      <AnimatePresence>
+        {!isLanding && (
+          <motion.div
+            key="navbar"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="relative z-[10005]"
+          >
+            <Navbar onSearchClick={() => setIsSidebarOpen(true)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      {/* ── PAGE ROUTES ──────────────────────────────────────── */}
       <main className="relative z-10">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<LoadingPage />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/news" element={<PageTransition><NewsPage /></PageTransition>} />
+            <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+            <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
 
-      {!isLanding && <Footer />}
+      {/* ── FOOTER + BACK TO TOP ─────────────────────────────── */}
+      <AnimatePresence>
+        {!isLanding && (
+          <motion.div
+            key="footer"
+            className="relative z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Footer />
+            <BackToTop />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-const App = () => {
-  return (
-    <Router>
-      <AppContent />
-    </Router>
-  );
-};
+const App = () => (
+  <Router>
+    <AppContent />
+  </Router>
+);
 
 export default App;

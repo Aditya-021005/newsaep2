@@ -1,88 +1,109 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import CornerAccents from './CornerAccents';
 
 const ArticleCard = ({ article, onClick, variant = 'full', isTall = false }) => {
   const isCompact = variant === 'compact';
+  const cardRef = useRef(null);
+  const [hovered, setHovered] = useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [4, -4]), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+    mouseX.set((e.clientX - left) / width - 0.5);
+    mouseY.set((e.clientY - top) / height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setHovered(false);
+  };
+
+  const date = new Date(article.published_date).toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className={`premium-card group cursor-pointer flex flex-col h-full overflow-hidden ${isCompact ? 'rounded-2xl md:rounded-3xl' : 'rounded-3xl'}`}
-      onClick={() => onClick(article)}
+      className="h-full"
     >
-      {/* IMAGE BOX */}
-      <div className={`relative overflow-hidden ${isCompact ? 'aspect-square md:aspect-[1.5/1]' : isTall ? 'aspect-[1/1] md:aspect-[4/3]' : 'aspect-square md:aspect-[2/1]'} flex-shrink-0`}>
-        <img
-          src={article.image_url}
-          alt={article.title}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0906]/90 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
-        <div className="absolute top-2 left-2 md:top-4 md:left-4">
-          <span className={`px-2 py-0.5 md:px-3 md:py-1 text-[7px] md:text-[9px] font-bold tracking-[0.2em] uppercase bg-[#d4af37] text-[#120c08] rounded-sm shadow-[0_0_10px_rgba(212,175,55,0.3)]`}>
-            {article.category || 'BOUNTY'}
-          </span>
-        </div>
-      </div>
-
-      {/* CONTENT BOX */}
-      <div className={`${isCompact ? 'p-3 md:p-6' : isTall ? 'p-6 md:p-12' : 'p-6 md:p-10'} flex flex-col flex-grow bg-[#1a120b]/60 backdrop-blur-md justify-between border-t border-[#d4af37]/10 relative`}>
-        {/* Burnt edge effect */}
-        <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_50px_rgba(0,0,0,0.5)] opacity-50" />
-
-        <div>
-          <div className="flex items-center gap-2 mb-2 md:mb-4">
-            <span className={`${isCompact ? 'text-[8px] md:text-[10px]' : 'text-[10px]'} font-mono text-[#d4af37]/40 uppercase tracking-widest`}>
-              {new Date(article.published_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        onClick={() => onClick(article)}
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+        className="relative h-full flex flex-col bg-white/5 border border-white/10 overflow-hidden cursor-pointer rounded-sm group"
+      >
+        <CornerAccents />
+        {/* IMAGE */}
+        <div className={`relative overflow-hidden shrink-0 ${isCompact ? 'aspect-[16/10]' : 'aspect-video'}`}>
+          <img
+            src={article.image_url}
+            alt={article.title}
+            className="w-full h-full object-cover grayscale transition-all duration-500"
+            style={{
+              filter: hovered ? 'grayscale(0%) brightness(1)' : 'grayscale(100%) brightness(0.6)',
+              transform: hovered ? 'scale(1.05)' : 'scale(1)'
+            }}
+          />
+          <div className="absolute top-4 left-4 z-10">
+            <span className="bg-white text-black text-[8px] font-bold tracking-[0.4em] uppercase px-3 py-1.5 shadow-2xl">
+              {article.category || 'Archive'}
             </span>
-            <div className={`h-px bg-[#d4af37]/10 flex-grow ${isCompact ? 'hidden md:block' : 'block'}`} />
-            {isTall && (
-              <span className="text-[9px] font-mono text-[#d4af37] uppercase tracking-widest hidden md:block">
-                // CAPTAIN_ORDER
-              </span>
-            )}
+          </div>
+        </div>
+
+        {/* CONTENT */}
+        <div className="p-6 flex flex-col flex-1">
+          <div className="flex items-center gap-4 mb-4">
+            <span className="text-[10px] font-mono text-white/40 tracking-widest">
+              {date}
+            </span>
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-[10px] font-mono text-white/40">
+              #{article.id}
+            </span>
           </div>
 
-          <h3 className={`${isCompact ? 'text-sm md:text-lg' : isTall ? 'text-xl md:text-4xl' : 'text-xl md:text-3xl'} font-bold mb-2 md:mb-4 tracking-tight group-hover:text-[#d4af37] transition-colors leading-tight line-clamp-2 md:line-clamp-3 font-pirate`}>
+          <h3 className={`font-serif font-bold text-white tracking-tight leading-tight mb-4 hover-glitch ${isCompact ? 'text-xl line-clamp-2' : 'text-2xl line-clamp-2'
+            }`}>
             {article.title}
           </h3>
 
-          <p className={`${isCompact ? 'hidden md:block' : 'block'} text-sm text-[#f5deb3]/60 leading-relaxed font-garamond ${isTall ? 'md:line-clamp-6' : 'line-clamp-2 md:line-clamp-3'} mb-6`}>
-            {article.summary}
-          </p>
-
-          {isTall && (
-            <div className="hidden md:flex flex-wrap gap-4 mt-8 pt-8 border-t border-[#d4af37]/10">
-              <div className="flex flex-col gap-1">
-                <span className="text-[8px] font-bold text-[#f5deb3]/20 uppercase tracking-widest">Treasure Hash</span>
-                <span className="text-[10px] font-mono text-[#f5deb3]/40 uppercase tracking-tighter">Gold_Ref_{article.id}</span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[8px] font-bold text-[#f5deb3]/20 uppercase tracking-widest">Mark Authenticity</span>
-                <span className="text-[10px] font-mono text-[#d4af37] uppercase tracking-tighter font-bold">Seal_Of_The_Pirate</span>
-              </div>
-            </div>
+          {!isCompact && (
+            <p className="text-white/40 text-sm line-clamp-3 mb-6">
+              {article.summary}
+            </p>
           )}
-        </div>
 
-        <div className={`mt-auto ${isCompact ? 'hidden md:flex' : 'flex'} pt-4 items-center justify-between group/btn border-t border-[#d4af37]/10`}>
-          <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#f5deb3]/40 group-hover:text-[#d4af37] transition-colors">
-            Hunt Treasure
-          </span>
-          <div className="w-10 h-10 rounded-sm border border-[#d4af37]/10 flex items-center justify-center transition-all group-hover:bg-[#d4af37] group-hover:border-[#d4af37] group-hover:scale-110">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:text-[#120c08] transition-colors">
-              {/* Skull and Crossbones icon */}
-              <circle cx="12" cy="10" r="3" />
-              <path d="M10 13c-1 1-2 2-2 3v1h8v-1c0-1-1-2-2-3" />
-              <path d="M4 20l4-4m12 4l-4-4m0-8l4-4M8 8L4 4" />
-            </svg>
+          <div className="mt-auto pt-4 flex items-center gap-4 overflow-hidden">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-white whitespace-nowrap group-hover:translate-x-2 transition-transform duration-300">
+              Explore →
+            </span>
+            <div className={`h-[1px] bg-white/20 transition-all duration-500 origin-left flex-1 ${hovered ? 'scale-x-100 opacity-60' : 'scale-x-0 opacity-0'}`} />
           </div>
         </div>
-      </div>
+
+        {/* Subtle Shine */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none opacity-0"
+          animate={{ opacity: hovered ? 1 : 0 }}
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%)',
+          }}
+        />
+      </motion.div>
     </motion.div>
   );
 };

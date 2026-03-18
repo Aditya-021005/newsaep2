@@ -1,105 +1,117 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import SmallCompass3D from './SmallCompass3D';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import CornerAccents from './CornerAccents';
 
 const ArticleHero = ({ article, onClick }) => {
   if (!article) return null;
 
+  const cardRef = useRef(null);
+  const [hovered, setHovered] = useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [2, -2]), { stiffness: 200, damping: 40 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-3, 3]), { stiffness: 200, damping: 40 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+    mouseX.set((e.clientX - left) / width - 0.5);
+    mouseY.set((e.clientY - top) / height - 0.5);
+  };
+  const handleMouseLeave = () => { mouseX.set(0); mouseY.set(0); setHovered(false); };
+
+  const date = new Date(article.published_date).toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-      className="relative w-full h-[500px] md:h-[600px] rounded-3xl overflow-hidden cursor-pointer group mb-12 shadow-2xl"
-      onClick={() => onClick(article)}
+      className="w-full mb-16"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      style={{ perspective: 1200 }}
     >
-      {/* Background Image */}
-      <img
-        src={article.image_url}
-        alt={article.title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-      />
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        onClick={() => onClick(article)}
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+        className="relative cursor-pointer bg-white/5 border border-white/10 overflow-hidden flex flex-col md:flex-row min-h-[500px] md:h-[600px] rounded-sm group"
+      >
+        <CornerAccents />
+        {/* IMAGE PANEL */}
+        <div className="w-full md:w-1/2 relative overflow-hidden h-64 md:h-full">
+          <img
+            src={article.image_url}
+            alt={article.title}
+            className="w-full h-full object-cover grayscale transition-transform duration-700"
+            style={{
+              transform: hovered ? 'scale(1.05)' : 'scale(1)',
+              filter: hovered ? 'grayscale(0%)' : 'grayscale(100%) brightness(0.7)'
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
 
-      {/* Overlay Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent opacity-40" />
-
-      {/* Border Glow */}
-      <div className="absolute inset-0 border border-white/10 rounded-3xl pointer-events-none" />
-
-      {/* Content */}
-      <div className="absolute bottom-0 left-0 w-full p-6 md:p-16 flex flex-col items-start gap-3 md:gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center gap-3 md:gap-4"
-        >
-          <span className="px-3 py-1 md:px-4 md:py-1.5 text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase bg-[#d4af37] text-[#120c08] rounded-sm shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-            CAPTAIN'S LOG
-          </span>
-          <span className="text-[8px] md:text-[10px] font-mono text-[#f5deb3]/50 uppercase tracking-[0.2em]">
-            // {new Date(article.published_date).toLocaleDateString()}
-          </span>
-        </motion.div>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-3xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-[#f5deb3] leading-[0.95] md:leading-[0.9] max-w-4xl font-pirate"
-        >
-          {article.title}
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-sm md:text-xl text-[#f5deb3]/70 max-w-2xl leading-relaxed font-medium line-clamp-3 md:line-clamp-none font-garamond"
-        >
-          {article.summary}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-2 md:mt-4 flex items-center gap-4 md:gap-6 group/btn"
-        >
-          <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase text-[#f5deb3]/60 group-hover:text-[#d4af37] transition-colors">
-            Claim the Loot
-          </span>
-          <div className="w-12 h-12 md:w-16 md:h-16 rounded-sm border border-[#d4af37]/20 flex items-center justify-center transition-all duration-500 group-hover:bg-[#d4af37] group-hover:border-[#d4af37] group-hover:rotate-[360deg] group-hover:scale-110">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-[#f5deb3] group-hover:text-[#120c08]"
-            >
-              {/* Anchor icon */}
-              <path d="M12 5V21" />
-              <path d="M5 12H2V12C2 16.5 5.5 20 10 21H14C18.5 20 22 16.5 22 12H19" />
-              <circle cx="12" cy="5" r="3" />
-            </svg>
+          <div className="absolute top-8 left-8">
+            <span className="bg-white text-black text-[10px] font-bold tracking-widest uppercase px-4 py-2">
+              {article.category || 'Featured'}
+            </span>
           </div>
-        </motion.div>
-      </div>
+        </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-8 right-8 flex flex-col items-end opacity-40">
-        <SmallCompass3D />
-        <span className="text-4xl font-black text-[#d4af37] font-pirate decoration-[#d4af37] underline decoration-2 underline-offset-8 uppercase">AEP</span>
-        <span className="text-[8px] font-mono text-[#f5deb3] mt-4 uppercase tracking-[0.5em]">Dread_Pirate_Comm</span>
-      </div>
+        {/* CONTENT PANEL */}
+        <div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-12 relative z-10">
+          <div className="mb-6">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-white/40 font-bold mb-4 block">
+              Most Recent Dispatch
+            </span>
+            <h2 className="font-serif text-4xl md:text-6xl font-bold tracking-tighter text-white leading-none mb-6 hover-glitch">
+              {article.title}
+            </h2>
+            <div className="w-16 h-px bg-white/20 mb-6" />
+            <p className="text-white/60 text-lg md:text-xl font-medium leading-relaxed line-clamp-3">
+              {article.summary}
+            </p>
+          </div>
 
-      {/* Burnt edge gradient */}
-      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_150px_rgba(0,0,0,0.8)]" />
+          <div className="flex flex-col gap-4 mt-auto">
+            <div className="flex items-center gap-6 text-[10px] tracking-widest uppercase text-white/40">
+              <div className="flex flex-col gap-1">
+                <span>Date Published</span>
+                <span className="text-white font-mono">{date}</span>
+              </div>
+              <div className="w-px h-8 bg-white/10" />
+              <div className="flex flex-col gap-1">
+                <span>Article ID</span>
+                <span className="text-white font-mono">#{article.id}</span>
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ x: 10 }}
+              className="group flex items-center gap-4 text-white text-[11px] font-bold tracking-[0.3em] uppercase mt-4"
+            >
+              Read Full Chronicles
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform group-hover:translate-x-2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Subtle Shine Effect */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{ opacity: hovered ? 1 : 0 }}
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%)',
+          }}
+        />
+      </motion.div>
     </motion.div>
   );
 };

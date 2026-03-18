@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Navbar = () => {
-  const location = useLocation();
-  const [isScrolled, setIsScrolled] = useState(false);
+const Navbar = ({ onSearchClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -13,129 +17,114 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
-
   const navLinks = [
     { name: 'Articles', path: '/news' },
     { name: 'The Team', path: '/about' },
-    { name: 'Parley', path: '/contact' },
+    { name: 'Contact', path: '/contact' },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled || isMenuOpen ? 'py-4' : 'py-6'}`}>
-      <div className="container mx-auto px-6">
-        <div className={`glass-panel flex items-center justify-between px-6 md:px-8 h-12 rounded-sm transition-all duration-300 ${isScrolled || isMenuOpen ? 'bg-[#1a120b]/80 shadow-amber-900/10' : 'bg-[#1a120b]/20'}`}>
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-[10005] transition-all duration-300 ${isScrolled && !isMenuOpen ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'
+          }`}
+      >
+        <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
+
           {/* LOGO */}
-          <Link to="/news" className="flex items-center group relative z-50">
-            <span className="text-[#f5deb3] font-bold text-2xl tracking-tight transition-transform group-hover:scale-105 font-pirate">
-              AEP<span className="text-[#d4af37]">BUCCANEER</span>
+          <Link to="/" className="flex flex-col items-start group">
+            <span className="font-serif text-2xl font-bold tracking-tighter text-white group-hover:scale-105 transition-transform duration-500">
+              AEP CHRONICLES
+            </span>
+            <span className="text-[7px] tracking-[0.5em] uppercase text-white/30 font-bold -mt-1 group-hover:text-white/60 transition-colors">
+              Official Journal · Est. 2026
             </span>
           </Link>
 
-          {/* DESKTOP NAV LINKS */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* DESKTOP NAV */}
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`px-4 py-1.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all duration-300 ${location.pathname === link.path
-                  ? 'bg-[#d4af37] text-[#120c08]'
-                  : 'hover:bg-[#d4af37]/10 text-[#f5deb3]/70 hover:text-[#f5deb3]'
+                className={`text-[10px] tracking-[0.3em] uppercase transition-all duration-300 hover:text-white ${location.pathname === link.path ? 'text-white underline underline-offset-8' : 'text-white/40'
                   }`}
               >
                 {link.name}
               </Link>
             ))}
-          </div>
-
-          {/* DESKTOP STATUS */}
-          <div className="hidden md:flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_10px_#d4af37]" />
-            <span className="text-[10px] font-bold text-[#d4af37]/40 tracking-[0.3em] uppercase">
-              Sails Hoisted
-            </span>
-          </div>
-
-          {/* MOBILE MENU TOGGLE */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden relative z-50 w-8 h-8 flex flex-col items-center justify-center gap-1.5 focus:outline-none"
-          >
-            <motion.span
-              animate={isMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-              className="w-5 h-0.5 bg-white rounded-full block"
-            />
-            <motion.span
-              animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-              className="w-5 h-0.5 bg-white rounded-full block"
-            />
-            <motion.span
-              animate={isMenuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-              className="w-5 h-0.5 bg-white rounded-full block"
-            />
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute top-4 left-6 right-6 glass-panel rounded-3xl p-8 flex flex-col gap-6 md:hidden z-40 bg-black/95 pt-16 shadow-2xl border border-white/10"
+            <button
+              onClick={onSearchClick}
+              className="ml-4 w-8 h-8 flex items-center justify-center text-white/40 hover:text-white hover:scale-110 transition-all cursor-pointer"
             >
-              {/* PREMIUM CLOSE BUTTON */}
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setIsMenuOpen(false)}
-                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all duration-300 group/close shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-              >
-                <div className="absolute inset-0 rounded-full bg-[#d4af37]/0 group-hover/close:bg-[#d4af37]/10 blur-xl transition-all duration-500" />
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="relative z-10 text-white/70 group-hover/close:text-[#d4af37] transition-colors"
-                >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </motion.button>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </div>
 
-              <div className="flex flex-col gap-4">
-                {navLinks.map((link) => (
+          {/* MOBILE TOGGLE / SEARCH */}
+          <div className="flex items-center gap-4 md:hidden">
+            <button
+              onClick={onSearchClick}
+              className="w-10 h-10 flex items-center justify-center text-white/40"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none z-[10006]"
+            >
+              <motion.span
+                animate={isMenuOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
+                className="w-6 h-0.5 bg-white block"
+              />
+              <motion.span
+                animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+                className="w-6 h-0.5 bg-white block"
+              />
+              <motion.span
+                animate={isMenuOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }}
+                className="w-6 h-0.5 bg-white block"
+              />
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* MOBILE MENU OVERLAY */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-[10002] bg-black flex flex-col items-center justify-center p-8 md:hidden"
+          >
+            <div className="flex flex-col items-center gap-12">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.name}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
                   <Link
-                    key={link.name}
                     to={link.path}
-                    className={`px-6 py-4 rounded-2xl text-lg font-bold transition-all font-pirate tracking-widest ${location.pathname === link.path
-                      ? 'bg-[#d4af37] text-[#120c08] shadow-[0_0_20px_rgba(212,175,55,0.4)]'
-                      : 'bg-white/5 text-[#f5deb3]/70 shadow-inner hover:bg-[#d4af37]/10'
+                    className={`text-4xl font-serif italic tracking-tight hover-glitch ${location.pathname === link.path ? 'text-white underline underline-offset-8' : 'text-white/40'
                       }`}
                   >
                     {link.name}
                   </Link>
-                ))}
-              </div>
-
-              <div className="mt-4 pt-8 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/20">System Status</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_10px_#d4af37]" />
-                  <span className="text-[10px] font-bold uppercase text-[#d4af37]">Active Voyage</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </nav>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

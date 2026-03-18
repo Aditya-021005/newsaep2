@@ -51,44 +51,48 @@ def get_image(category):
 # Clear existing news to prevent duplicates with broken images
 Article.objects.all().delete()
 
-# 1. Main News
-main_articles = [
-    {'title': 'The Future of AI in Modern Journalism', 'category': 'Technology'},
-    {'title': 'Global Economic Shifts in the Post-Digital Era', 'category': 'Business'},
-    {'title': 'Sustainability: The New Benchmark for Innovation', 'category': 'Innovation'},
-    {'title': 'The Rise of Smart Cities and Connected Living', 'category': 'Urban'},
-    {'title': 'Digital Archaeology: Rediscovering History', 'category': 'Culture'}
-]
-
+# 1. Extensive Population (100 Articles)
+CATEGORIES_LIST = list(IMAGE_POOLS.keys())
 now = timezone.now()
 
-for art in main_articles:
-    Article.objects.create(
-        title=art['title'],
-        content=f"Comprehensive analysis on {art['title']}. Integrating global data streams and expert insights to define the future of the {art['category']} sector. Verified by AEP_CORE.",
-        summary=f"Key insights into {art['category']} transformation.",
-        image_url=get_image(art['category']),
-        category=art['category'],
-        published_date=now - timedelta(hours=random.randint(1, 24))
-    )
+print(f"Generating 100 articles with 5 paragraphs each...")
 
-# 2. Legacy Archives
-legacy_titles = [
-    "Quantum Computing: The Genesis", "The First Digital Revolution", "Legacy Systems Analysis",
-    "Archival Data Recovery Protocols", "Neural Interface Alpha Release", "Deep Space Relay V1",
-    "Carbon Capture: Initial Findings", "Smart Grid Blueprint 2020", "The Bio-Digital Convergence",
-    "Virtual Reality: The Early Days", "Autonomous Transit Genesis", "Global Connectivity 2015"
-]
+for i in range(100):
+    cat = random.choice(CATEGORIES_LIST)
+    title_themes = {
+        'Technology': ['Quantum Computing', 'Neural Link', 'Cyber-Defense', 'AI Governance', 'Hardware Genesis'],
+        'Business': ['Global Markets', 'Corporate Hegemony', 'Economic Warfare', 'Trade Protocols', 'Market Synthesis'],
+        'Innovation': ['Smart Fusion', 'Bio-Digital Shift', 'Energy Protocols', 'Materials Science', 'Next-Gen Habitats'],
+        'Culture': ['Digital Art', 'Metropolitan History', 'The Human Interface', 'Archival Resurgence', 'Sonic Architecture'],
+        'Urban': ['Neon Districts', 'Smart Infrastructure', 'Vertical Living', 'Transit Networks', 'Grid Management'],
+        'Legacy': ['System Genesis', 'Ancient Data', 'The First Network', 'Hardware Lore', 'Protocol Zero']
+    }
+    
+    theme = random.choice(title_themes.get(cat, ['The Chronicles']))
+    title = f"{theme}: Intelligence Module {random.randint(1000, 9999)}"
+    
+    # Generate 5 Big Paragraphs
+    p1 = f"The initial investigation into {theme} reveals a complex layering of legacy systems and modern-era protocols. Our intelligence streams suggest that the {cat} sector is undergoing a fundamental shift, moving away from centralized control toward a more fluid, algorithmically-governed state of existence. This transition is not without friction; the data suggests localized conflicts within the primary nodes of the network, requiring immediate algorithmic intervention and high-level verification."
+    
+    p2 = f"Further deep-scan analysis has identified several anomalous data clusters within the {theme} perimeter. These clusters appear to be remnants of earlier, less optimized versions of the {cat} architecture, suggesting a history of rapid development and occasional systemic failure. To mitigate these risks, the AEP_CORE has initiated a series of stabilization protocols, designed to harmonize the conflicting data streams and ensure a seamless integration of the new modules into the existing framework."
+    
+    p3 = f"Public sentiment regarding the {cat} transition remains highly volatile. Surveillance of the social matrix indicates a growing divide between those who embrace the algorithmic optimization and those who remain tethered to the legacy manual-input systems. This cultural friction is a primary driver of the current market instability, as seen in the fluctuating value of the primary data tokens. The chronicles must record this period of transition with absolute clarity, documenting both the technological marvels and the human costs involved."
+    
+    p4 = f"On a technical level, the {theme} implementation utilizes a multi-layered encryption scheme, ensuring that each data packet is verified at every transition point. This rigorous security protocol is essential for maintaining the integrity of the {cat} archives, especially in an era of increasing frequency-based attacks and unauthorized deep-scans. Our engineers are constantly refining these defenses, deploying new AI-driven heuristic models that can detect and neutralize threats before they manifest within the primary system architecture."
+    
+    p5 = f"In conclusion, the evolution of {theme} represents a significant milestone in our ongoing pursuit of systemic optimization. As we continue to refine the {cat} modules and integrate new intelligence clusters, the chronicles will remain the definitive record of our progress. Every byte of data, every verified transmission, and every stabilized node contributes to the grand architecture of the future. The transmission ends here, but the data remains eternal. Verified by AEP_SYSTEM_ADMIN."
 
-for title in legacy_titles:
-    cat = random.choice(list(IMAGE_POOLS.keys()))
+    full_content = "\n\n".join([p1, p2, p3, p4, p5])
+    
     Article.objects.create(
         title=title,
-        content=f"Archived technical documentation for {title}. This intelligence cluster represents legacy data from the early post-digital era. Verified by AEP_HUB_SYS.",
-        summary=f"Legacy archival data: {title}",
+        content=full_content,
+        summary=f"Extensive intelligence recap on {theme} and {cat} sector evolution.",
         image_url=get_image(cat),
         category=cat,
-        published_date=now - timedelta(days=random.randint(365, 1000))
+        published_date=now - timedelta(hours=random.randint(1, 48 * 14)) # Over last 2 weeks
     )
+
+print("100 multi-paragraph chronicles seeded successfully!")
 
 print("Visual-optimized seeding completed successfully!")
