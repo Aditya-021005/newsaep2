@@ -27,12 +27,38 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
 
   const paragraphs = content.split('\n').filter(p => p.trim());
 
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+    document.body.removeChild(textArea);
+  };
+
   const handleShare = (platform) => {
     const url = window.location.href;
     const title = activeArticle.title || '';
     if (platform === 'twitter') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
     if (platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`, '_blank');
-    if (platform === 'copy') navigator.clipboard.writeText(`${title} — ${url}`).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+    if (platform === 'copy') {
+      const textToCopy = `${title} — ${url}`;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+      } else {
+        fallbackCopyTextToClipboard(textToCopy);
+      }
+    }
   };
 
   return createPortal(
