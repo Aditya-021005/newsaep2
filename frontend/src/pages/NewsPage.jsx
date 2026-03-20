@@ -28,7 +28,7 @@ const NewsPage = () => {
 
   const fetchArticles = (url = null) => {
     const isInitial = !url;
-    let targetUrl = url || `${import.meta.env.VITE_API_BASE_URL}/articles/`;
+    let targetUrl = url || `${import.meta.env.VITE_API_BASE_URL || '/api'}/articles/`;
 
     // Add filtering params to initial fetch
     if (isInitial) {
@@ -72,7 +72,7 @@ const NewsPage = () => {
 
       <div className={`container mx-auto px-4 sm:px-6 relative pb-20 ${(searchQuery || categoryFilter) ? 'pt-40' : 'pt-32'}`}>
 
-        {}
+        { }
         {(searchQuery || categoryFilter) && (
           <div className="mb-16 flex flex-col gap-4">
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-bold">

@@ -114,7 +114,7 @@ const AboutPage = () => {
   const [totalMembers, setTotalMembers] = useState(0);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/members/`)
+    axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/members/`)
       .then(res => {
         const dataArr = Array.isArray(res.data) ? res.data : (res.data.results || []);
         setTotalMembers(res.data?.count || dataArr.length || 0);

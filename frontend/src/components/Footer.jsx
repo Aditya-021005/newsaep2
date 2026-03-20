@@ -4,7 +4,7 @@ import axios from 'axios';
 const Footer = () => {
   const [headlines, setHeadlines] = useState([]);
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/articles/`)
+    axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/articles/`)
       .then(res => {
         const articles = Array.isArray(res.data) ? res.data : res.data.results;
         setHeadlines((articles || []).slice(0, 8).map(a => a.title));

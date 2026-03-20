@@ -10,7 +10,7 @@ const ContactPage = () => {
     setStatus({ type: '', message: '' });
     const data = Object.fromEntries(new FormData(e.target));
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/contact/`, data);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/contact/`, data);
       setStatus({ type: 'success', message: 'Transmission received. The chronicles will be updated shortly.' });
       e.target.reset();
     } catch {
