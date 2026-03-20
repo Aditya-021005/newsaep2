@@ -116,8 +116,9 @@ const AboutPage = () => {
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/members/`)
       .then(res => {
-        setTotalMembers(res.data.length || 0);
-        const grouped = res.data.reduce((acc, member) => {
+        const dataArr = Array.isArray(res.data) ? res.data : (res.data.results || []);
+        setTotalMembers(res.data?.count || dataArr.length || 0);
+        const grouped = dataArr.reduce((acc, member) => {
           const display = member.role ? `${member.name} (${member.role})` : member.name;
           const group = acc.find(g => g.year === member.year);
           if (group) group.members.push(display);
