@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-
 const Navbar = ({ onSearchClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);
-
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
   const navLinks = [
     { name: 'Articles', path: '/news' },
     { name: 'The Team', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
-
   return (
     <>
       <nav
@@ -30,8 +25,6 @@ const Navbar = ({ onSearchClick }) => {
           }`}
       >
         <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
-
-          {/* LOGO */}
           <Link to="/" className="flex flex-col items-start group">
             <span className="font-serif text-2xl font-bold tracking-tighter text-white group-hover:scale-105 transition-transform duration-500">
               AEP CHRONICLES
@@ -40,8 +33,6 @@ const Navbar = ({ onSearchClick }) => {
               Official Journal · Est. 2026
             </span>
           </Link>
-
-          {/* DESKTOP NAV */}
           <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
@@ -62,8 +53,6 @@ const Navbar = ({ onSearchClick }) => {
               </svg>
             </button>
           </div>
-
-          {/* MOBILE TOGGLE / SEARCH */}
           <div className="flex items-center gap-4 md:hidden">
             <button
               onClick={onSearchClick}
@@ -93,8 +82,6 @@ const Navbar = ({ onSearchClick }) => {
           </div>
         </div>
       </nav>
-
-      {/* MOBILE MENU OVERLAY */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -127,5 +114,4 @@ const Navbar = ({ onSearchClick }) => {
     </>
   );
 };
-
 export default Navbar;

@@ -1,11 +1,8 @@
 import os
 import django
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
-
 from news.models import Member
-
 member_groups = [
   {
     "year": "2024",
@@ -60,9 +57,7 @@ member_groups = [
     "members": ["Ananth", "Anish (AEP Editor)", "Archit", "Madhusudan", "Pratik", "Rahul (BEP Editor)", "Rusheen (OEP Editor)", "Soumya (CF Editor)", "Srishti", "Tanay", "Tanmayee", "Vijay (TFP Editor)"]
   }
 ]
-
 Member.objects.all().delete()
-
 for group in member_groups:
     year = group["year"]
     for member_str in group["members"]:
@@ -72,10 +67,7 @@ for group in member_groups:
             parts = member_str.split("(", 1)
             name = parts[0].strip()
             role = parts[1].replace(")", "").strip()
-        
         if year == "2024":
             name = name.title()
-            
         Member.objects.create(name=name, year=year, role=role)
-
 print(f"Successfully seeded {Member.objects.count()} members.")

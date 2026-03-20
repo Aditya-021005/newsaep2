@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-
 const ContactPage = () => {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -21,12 +19,9 @@ const ContactPage = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen pt-32 pb-32 px-6">
       <div className="container mx-auto max-w-4xl">
-
-        {/* HEADER */}
         <header className="text-center mb-24 flex flex-col items-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-bold mb-4 block">
@@ -38,11 +33,7 @@ const ContactPage = () => {
             <div className="w-16 h-px bg-white/20" />
           </motion.div>
         </header>
-
-        {/* FORM SECTION */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
-
-          {/* INFO */}
           <div className="md:col-span-5 flex flex-col gap-12">
             <div className="flex flex-col gap-4">
               <span className="text-[10px] tracking-[0.4em] uppercase text-white font-bold">
@@ -52,7 +43,6 @@ const ContactPage = () => {
                 Submit your inquiries, secure chronicles, or join the brotherhood through our official channels.
               </p>
             </div>
-
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-2">
                 <span className="text-[9px] text-white/20 uppercase tracking-[0.3em] font-bold">Official Email</span>
@@ -68,8 +58,6 @@ const ContactPage = () => {
               </div>
             </div>
           </div>
-
-          {/* FORM */}
           <div className="md:col-span-7">
             <form onSubmit={handleSubmit} className="flex flex-col gap-10">
               <div className="grid grid-cols-1 gap-12">
@@ -88,7 +76,6 @@ const ContactPage = () => {
                     <div className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-white group-focus-within:w-full transition-all duration-700" />
                   </div>
                 </div>
-
                 <div className="flex flex-col gap-3 group">
                   <span className="text-[10px] text-white/20 group-focus-within:text-white group-focus-within:translate-x-1 uppercase tracking-[0.4em] font-bold transition-all duration-300">
                     Archive Address
@@ -104,7 +91,6 @@ const ContactPage = () => {
                     <div className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-white group-focus-within:w-full transition-all duration-700" />
                   </div>
                 </div>
-
                 <div className="flex flex-col gap-3 group">
                   <span className="text-[10px] text-white/20 group-focus-within:text-white group-focus-within:translate-x-1 uppercase tracking-[0.4em] font-bold transition-all duration-300">
                     The Message
@@ -118,7 +104,6 @@ const ContactPage = () => {
                   />
                 </div>
               </div>
-
               <div className="pt-8">
                 <button
                   type="submit"
@@ -131,7 +116,6 @@ const ContactPage = () => {
                   <div className="absolute inset-0 bg-white translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
                 </button>
               </div>
-
               {status.message && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -148,5 +132,4 @@ const ContactPage = () => {
     </div>
   );
 };
-
 export default ContactPage;

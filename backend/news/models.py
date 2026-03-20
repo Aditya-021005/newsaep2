@@ -1,5 +1,4 @@
 from django.db import models
-
 class Article(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -8,23 +7,18 @@ class Article(models.Model):
     image_file = models.ImageField(upload_to='articles/', blank=True, null=True)
     summary = models.CharField(max_length=500, blank=True)
     category = models.CharField(max_length=100, default='Trending')
-
     def __str__(self):
         return self.title
-
 class ContactMessage(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return f"Message from {self.name}"
-
 class Member(models.Model):
     name = models.CharField(max_length=255)
     year = models.CharField(max_length=4)
     role = models.CharField(max_length=255, blank=True)
-
     def __str__(self):
         return f"{self.name} ({self.year})"

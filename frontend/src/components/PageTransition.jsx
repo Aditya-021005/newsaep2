@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-
 const pageVariants = {
-  // ... existing variants
   initial: {
     opacity: 0,
     y: 30,
@@ -27,7 +25,6 @@ const pageVariants = {
     },
   },
 };
-
 const PageTransition = ({ children }) => {
   return (
     <motion.div
@@ -40,5 +37,4 @@ const PageTransition = ({ children }) => {
     </motion.div>
   );
 };
-
 export default PageTransition;

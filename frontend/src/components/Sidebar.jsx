@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 const CATEGORIES = [
   'All',
   'Technology',
@@ -10,21 +9,17 @@ const CATEGORIES = [
   'Urban',
   'Legacy',
 ];
-
 const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange }) => {
   const [searchValue, setSearchValue] = useState('');
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     onSearch(searchValue);
     onClose();
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* BACKDROP */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -32,8 +27,6 @@ const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange 
             onClick={onClose}
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[20000]"
           />
-
-          {/* SIDEBAR PANEL */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
@@ -41,7 +34,6 @@ const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange 
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/10 z-[20001] flex flex-col shadow-2xl"
           >
-            {/* HEADER */}
             <div className="p-8 flex items-center justify-between border-b border-white/10">
               <span className="text-[10px] tracking-[0.6em] uppercase text-white/40 font-bold">
                 Archive Filter
@@ -53,8 +45,6 @@ const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange 
                 ✕
               </button>
             </div>
-
-            {/* SEARCH */}
             <div className="p-8">
               <form onSubmit={handleSearchSubmit} className="relative group">
                 <input
@@ -73,8 +63,6 @@ const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange 
                 </button>
               </form>
             </div>
-
-            {/* CATEGORIES */}
             <div className="flex-1 overflow-y-auto px-8 py-4">
               <div className="flex flex-col gap-2">
                 <span className="text-[9px] tracking-[0.4em] uppercase text-white/20 font-medium mb-6">
@@ -105,8 +93,6 @@ const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange 
                 ))}
               </div>
             </div>
-
-            {/* FOOTER */}
             <div className="p-8 border-t border-white/10">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-4 text-[9px] tracking-[0.4em] uppercase text-white/20 font-bold">
@@ -132,5 +118,4 @@ const Sidebar = ({ isOpen, onClose, onSearch, currentCategory, onCategoryChange 
     </AnimatePresence>
   );
 };
-
 export default Sidebar;

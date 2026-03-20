@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
 const Footer = () => {
   const [headlines, setHeadlines] = useState([]);
-
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/articles/`)
       .then(res => {
@@ -19,16 +17,12 @@ const Footer = () => {
         'Journalism with Precision',
       ]));
   }, []);
-
   return (
     <footer className="w-full bg-black text-white border-t border-white/10 pt-12 md:pt-16 pb-8 md:pb-12">
       <div className="container mx-auto px-6 max-w-7xl">
-
-        {/* TOP SECTION: TICKER */}
         <div className="mb-8 md:mb-16 overflow-hidden py-4 border-y border-white/5 relative">
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-black to-transparent z-10" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-black to-transparent z-10" />
-
           <div className="flex whitespace-nowrap animate-ticker">
             {[...headlines, ...headlines].map((text, i) => (
               <span key={i} className="inline-flex items-center gap-4 px-8 text-[10px] font-bold tracking-[0.3em] uppercase text-white/30">
@@ -38,11 +32,7 @@ const Footer = () => {
             ))}
           </div>
         </div>
-
-        {/* MIDDLE SECTION: GRID */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 mb-8 md:mb-16">
-
-          {/* BRAND */}
           <div className="md:col-span-6 flex flex-col gap-6">
             <div className="flex flex-col gap-1">
               <span className="font-serif text-3xl font-bold tracking-tighter">
@@ -64,8 +54,6 @@ const Footer = () => {
               </div>
             </div>
           </div>
-
-          {/* NAV LINKS */}
           <div className="md:col-span-3 flex flex-col gap-6">
             <span className="text-[10px] tracking-[0.4em] uppercase text-white font-bold">
               Navigation
@@ -86,8 +74,6 @@ const Footer = () => {
               ))}
             </nav>
           </div>
-
-          {/* INFO */}
           <div className="md:col-span-3 flex flex-col gap-6">
             <span className="text-[10px] tracking-[0.4em] uppercase text-white font-bold">
               Headquarters
@@ -104,8 +90,6 @@ const Footer = () => {
             </div>
           </div>
         </div>
-
-        {/* BOTTOM SECTION: COPYRIGHT */}
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 text-center md:text-left">
           <span className="text-[10px] tracking-[0.3em] uppercase text-white/20">
             © {new Date().getFullYear()} APOGEE ENGLISH PRESS. All Rights Reserved.
@@ -123,5 +107,4 @@ const Footer = () => {
     </footer>
   );
 };
-
 export default Footer;

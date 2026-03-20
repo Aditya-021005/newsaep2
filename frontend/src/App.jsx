@@ -13,48 +13,36 @@ import Sidebar from './components/Sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CustomCursor from './components/CustomCursor';
-
 const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isLanding = location.pathname === '/';
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const [hasMoved, setHasMoved] = useState(false);
-
-  // SEARCH HANDLERS
   const handleSidebarSearch = (query) => {
     navigate(`/news?search=${encodeURIComponent(query)}`);
   };
-
   const handleSidebarCategory = (category) => {
     if (category) navigate(`/news?category=${encodeURIComponent(category)}`);
     else navigate('/news');
   };
-
-  // 1. Disable browser scroll restoration to prevent "halfway" jumping
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
     }
-
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
       setMousePos({ x, y });
       if (!hasMoved) setHasMoved(true);
     };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
-
-  // 2. Aggressive staggered scroll reset on route change
   useEffect(() => {
-    const scrollResets = [0, 100, 450]; // Immediate, Mid-transition, Post-transition (0.4s)
-
+    const scrollResets = [0, 100, 450]; 
     const timers = scrollResets.map(delay =>
       setTimeout(() => {
         window.scrollTo(0, 0);
@@ -62,21 +50,12 @@ const AppContent = () => {
         document.body.scrollTo(0, 0);
       }, delay)
     );
-
     return () => timers.forEach(clearTimeout);
-  }, [location.pathname, searchParams.toString()]); // Also reset on search change
-
-  /* Global canvas is always mounted to prevent transition resets */
+  }, [location.pathname, searchParams.toString()]); 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black overflow-x-hidden">
-
-      {/* ── FILM GRAIN OVERLAY ──────────────────────────────────── */}
       <div className="noir-grain" />
-
-      {/* ── CUSTOM CURSOR ───────────────────────────────────────── */}
       <CustomCursor />
-
-      {/* ── SIDEBAR ───────────────────────────────────────────── */}
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -84,7 +63,6 @@ const AppContent = () => {
         currentCategory={searchParams.get('category')}
         onCategoryChange={handleSidebarCategory}
       />
-
       <div
         className="fixed inset-0 z-0 bg-black pointer-events-none overflow-hidden transition-opacity duration-1000"
         style={{
@@ -95,8 +73,6 @@ const AppContent = () => {
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '100px 100px' }} />
       </div>
-
-      {/* ── NAVBAR ───────────────────────────────────────────── */}
       <AnimatePresence>
         {!isLanding && (
           <motion.div
@@ -111,8 +87,6 @@ const AppContent = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* ── PAGE ROUTES ──────────────────────────────────────── */}
       <main className="relative z-10">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -123,8 +97,6 @@ const AppContent = () => {
           </Routes>
         </AnimatePresence>
       </main>
-
-      {/* ── FOOTER + BACK TO TOP ─────────────────────────────── */}
       <AnimatePresence>
         {!isLanding && (
           <motion.div
@@ -143,11 +115,9 @@ const AppContent = () => {
     </div>
   );
 };
-
 const App = () => (
   <Router>
     <AppContent />
   </Router>
 );
-
 export default App;

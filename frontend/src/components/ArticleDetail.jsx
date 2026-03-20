@@ -1,32 +1,24 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-
 const ArticleDetail = ({ article, isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
   const [lastArticle, setLastArticle] = useState(null);
-
   React.useEffect(() => {
     if (article) setLastArticle(article);
   }, [article]);
-
   const activeArticle = article || lastArticle;
-
   if (!activeArticle) return null;
-
   const content = activeArticle.content || '';
   const summary = activeArticle.summary || '';
   const wordCount = (content + ' ' + summary).split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
-
   let dateStr = '';
   try {
     const d = new Date(activeArticle.published_date);
     dateStr = isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
   } catch { dateStr = ''; }
-
   const paragraphs = content.split('\n').filter(p => p.trim());
-
   const fallbackCopyTextToClipboard = (text) => {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -35,8 +27,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
     textArea.style.position = "fixed";
     textArea.style.opacity = "0";
     document.body.appendChild(textArea);
-
-    // iOS Safari requires specific selection range
     if (navigator.userAgent.match(/ipad|iphone/i)) {
       const range = document.createRange();
       range.selectNodeContents(textArea);
@@ -48,7 +38,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
       textArea.focus();
       textArea.select();
     }
-
     try {
       const successful = document.execCommand('copy');
       if (successful) {
@@ -60,7 +49,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
     }
     document.body.removeChild(textArea);
   };
-
   const handleShare = (platform) => {
     const url = window.location.href;
     const title = activeArticle.title || '';
@@ -75,7 +63,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
       }
     }
   };
-
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -86,7 +73,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
           transition={{ duration: 0.4 }}
           className="fixed inset-0 z-[20000] bg-black/95 backdrop-blur-xl"
         >
-          {/* OMNIPRESENT CLOSE BUTTON */}
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -98,11 +84,8 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
           >
             <span className="text-xl md:text-2xl font-light">✕</span>
           </motion.button>
-
-          {/* SCROLLABLE AREA */}
           <div className="absolute inset-0 overflow-y-auto" onClick={onClose}>
             <div className="min-h-screen flex items-start justify-center p-0 md:p-12">
-
               <motion.div
                 initial={{ opacity: 0, y: 40, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -111,7 +94,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                 onClick={e => e.stopPropagation()}
                 className="w-full max-w-5xl bg-black border-x border-b border-white/10 overflow-hidden relative shadow-2xl"
               >
-                {/* HERO IMAGE */}
                 <div className="relative h-[35vh] md:h-[50vh] overflow-hidden">
                   <img
                     src={activeArticle.image_url}
@@ -125,11 +107,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                     </span>
                   </div>
                 </div>
-
-                {/* CONTENT */}
                 <div className="p-6 md:p-16 lg:p-24 bg-black">
-
-                  {/* COMPACT META FOR MOBILE */}
                   <div className="grid grid-cols-2 md:flex md:items-center gap-y-8 gap-x-12 mb-12 border-b border-white/10 pb-12">
                     <div className="flex flex-col gap-1">
                       <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-white/30 font-bold">Published</span>
@@ -144,8 +122,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                       <span className="text-white text-[11px] md:text-xs font-mono">#{activeArticle.id.toString().padStart(4, '0')}</span>
                     </div>
                   </div>
-
-                  {/* TITLE & SUMMARY */}
                   <div className="max-w-3xl mx-auto mb-16 text-center">
                     <h1 className="font-serif text-4xl md:text-7xl font-bold tracking-tighter text-white mb-8 leading-none">
                       {activeArticle.title}
@@ -156,8 +132,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                       </p>
                     )}
                   </div>
-
-                  {/* BODY TEXT */}
                   <div className="max-w-2xl mx-auto prose prose-invert prose-white">
                     {paragraphs.map((para, i) => (
                       <p key={i} className="text-white/70 text-lg leading-relaxed mb-8 first-letter:text-4xl first-letter:font-serif first-letter:mr-2">
@@ -165,8 +139,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                       </p>
                     ))}
                   </div>
-
-                  {/* SHARE */}
                   <div className="mt-20 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] uppercase text-white/20 font-bold text-center md:text-left">
@@ -176,7 +148,6 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                         Verification Secured
                       </span>
                     </div>
-
                     <div className="flex items-center gap-4">
                       {[
                         { key: 'copy', label: copied ? 'Link Copied' : 'Copy Link' },
@@ -206,5 +177,4 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
     document.body
   );
 };
-
 export default ArticleDetail;

@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavigationalChart from '../components/NavigationalChart';
-
 const StatCard = ({ label, value, icon, delay }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -21,10 +20,8 @@ const StatCard = ({ label, value, icon, delay }) => (
     </span>
   </motion.div>
 );
-
 const CrewOverlay = ({ isOpen, onClose, memberData }) => {
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -34,10 +31,8 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
     }
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
-
   const nextYear = () => setCurrentYearIndex(p => (p + 1) % memberData.length);
   const prevYear = () => setCurrentYearIndex(p => (p - 1 + memberData.length) % memberData.length);
-
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -49,7 +44,6 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
           className="fixed inset-0 flex items-center justify-center p-4 sm:p-8 z-[99999] bg-black/95 backdrop-blur-md"
         >
           <div className="absolute inset-0" onClick={onClose} />
-
           <motion.div
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -60,7 +54,6 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
             <button onClick={onClose} className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors text-xl">
               ✕
             </button>
-
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-bold mb-4">
               Historical Records
             </span>
@@ -68,8 +61,7 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
               THE TEAM MANIFEST
             </h2>
             <div className="w-12 h-px bg-white/20 mb-12" />
-
-            <div className="w-full flex-1 flex flex-col items-center justify-center min-h-[300px]">
+            <div className="w-full flex-1 flex flex-col items-center justify-center min-h-[60vh] md:min-h-[350px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={memberData[currentYearIndex]?.year}
@@ -81,9 +73,9 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
                   <span className="font-serif text-6xl md:text-8xl font-bold tracking-tighter text-white/20 mb-8 leading-none">
                     {memberData[currentYearIndex]?.year}
                   </span>
-                  <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 max-w-2xl">
+                  <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 max-w-2xl px-4">
                     {memberData[currentYearIndex]?.members.map((name, i) => (
-                      <span key={i} className="text-white/60 text-base md:text-lg font-medium">
+                      <span key={i} className="text-white/60 text-base md:text-lg font-medium text-center">
                         {name}
                       </span>
                     ))}
@@ -91,8 +83,7 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
                 </motion.div>
               </AnimatePresence>
             </div>
-
-            <div className="mt-12 flex items-center gap-12">
+            <div className="mt-12 mb-4 md:mb-0 flex items-center justify-center gap-6 md:gap-12 w-full">
               <button
                 onClick={prevYear}
                 className="text-[10px] tracking-[0.3em] uppercase text-white/40 hover:text-white transition-colors font-bold"
@@ -118,14 +109,14 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
     document.body
   );
 };
-
 const AboutPage = () => {
   const [memberData, setMemberData] = useState([]);
+  const [totalMembers, setTotalMembers] = useState(0);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/members/`)
       .then(res => {
+        setTotalMembers(res.data.length || 0);
         const grouped = res.data.reduce((acc, member) => {
           const display = member.role ? `${member.name} (${member.role})` : member.name;
           const group = acc.find(g => g.year === member.year);
@@ -138,12 +129,9 @@ const AboutPage = () => {
       })
       .catch(err => console.error('Failed to fetch crew members:', err));
   }, []);
-
   return (
     <div className="min-h-screen pt-32 pb-32 px-6">
       <div className="container mx-auto max-w-5xl">
-
-        {/* HEADER */}
         <header className="text-center mb-24 flex flex-col items-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-bold mb-4 block">
@@ -155,8 +143,6 @@ const AboutPage = () => {
             <div className="w-16 h-px bg-white/20" />
           </motion.div>
         </header>
-
-        {/* MISSION SECTION */}
         <section className="mb-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -180,17 +166,13 @@ const AboutPage = () => {
             </button>
           </motion.div>
         </section>
-
-        {/* STATS SECTION */}
         <section className="mb-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatCard label="Total Members" value="1,200+" icon="⌘" delay={0} />
+            <StatCard label="Total Members" value={totalMembers > 0 ? totalMembers : "..."} icon="⌘" delay={0} />
             <StatCard label="Publications" value="850+" icon="◈" delay={0.1} />
             <StatCard label="Active Status" value="Online" icon="○" delay={0.2} />
           </div>
         </section>
-
-        {/* CHART SECTION */}
         <section>
           <div className="flex items-center gap-6 mb-8">
             <span className="text-[10px] tracking-[0.4em] uppercase text-white font-bold">
@@ -203,7 +185,6 @@ const AboutPage = () => {
           </div>
         </section>
       </div>
-
       <CrewOverlay
         isOpen={isOverlayOpen}
         onClose={() => setIsOverlayOpen(false)}
@@ -212,5 +193,4 @@ const AboutPage = () => {
     </div>
   );
 };
-
 export default AboutPage;

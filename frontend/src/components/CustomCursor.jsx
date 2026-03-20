@@ -33,10 +33,7 @@ const CustomCursor = () => {
   const cursorY = useSpring(mousePosition.y, springConfig);
 
   return (
-    <div
-      className="hidden md:block fixed inset-0 pointer-events-none z-[10000] transition-opacity duration-300"
-      style={{ opacity: hasMoved ? 1 : 0 }}
-    >
+    <div className="hidden md:block fixed inset-0 pointer-events-none z-[10000]">
       {/* DOT */}
       <motion.div
         className="fixed w-2 h-2 bg-white rounded-full mix-blend-difference"

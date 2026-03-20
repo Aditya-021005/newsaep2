@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => setIsVisible(window.scrollY > 400);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -40,5 +37,4 @@ const BackToTop = () => {
     </AnimatePresence>
   );
 };
-
 export default BackToTop;

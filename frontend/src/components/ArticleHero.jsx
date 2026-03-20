@@ -1,18 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import CornerAccents from './CornerAccents';
-
 const ArticleHero = ({ article, onClick }) => {
   if (!article) return null;
-
   const cardRef = useRef(null);
   const [hovered, setHovered] = useState(false);
-
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [2, -2]), { stiffness: 200, damping: 40 });
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-3, 3]), { stiffness: 200, damping: 40 });
-
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
     const { left, top, width, height } = cardRef.current.getBoundingClientRect();
@@ -20,11 +16,9 @@ const ArticleHero = ({ article, onClick }) => {
     mouseY.set((e.clientY - top) / height - 0.5);
   };
   const handleMouseLeave = () => { mouseX.set(0); mouseY.set(0); setHovered(false); };
-
   const date = new Date(article.published_date).toLocaleDateString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric',
   });
-
   return (
     <motion.div
       className="w-full mb-16"
@@ -43,7 +37,6 @@ const ArticleHero = ({ article, onClick }) => {
         className="relative cursor-pointer bg-white/5 border border-white/10 overflow-hidden flex flex-col md:flex-row min-h-[500px] md:h-[600px] rounded-sm group"
       >
         <CornerAccents />
-        {/* IMAGE PANEL */}
         <div className="w-full md:w-1/2 relative overflow-hidden h-64 md:h-full">
           <img
             src={article.image_url}
@@ -55,15 +48,12 @@ const ArticleHero = ({ article, onClick }) => {
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
-
           <div className="absolute top-8 left-8">
             <span className="bg-white text-black text-[10px] font-bold tracking-widest uppercase px-4 py-2">
               {article.category || 'Featured'}
             </span>
           </div>
         </div>
-
-        {/* CONTENT PANEL */}
         <div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-12 relative z-10">
           <div className="mb-6">
             <span className="text-[10px] tracking-[0.4em] uppercase text-white/40 font-bold mb-4 block">
@@ -77,7 +67,6 @@ const ArticleHero = ({ article, onClick }) => {
               {article.summary}
             </p>
           </div>
-
           <div className="flex flex-col gap-4 mt-auto">
             <div className="flex items-center gap-6 text-[10px] tracking-widest uppercase text-white/40">
               <div className="flex flex-col gap-1">
@@ -90,7 +79,6 @@ const ArticleHero = ({ article, onClick }) => {
                 <span className="text-white font-mono">#{article.id}</span>
               </div>
             </div>
-
             <motion.button
               whileHover={{ x: 10 }}
               className="group flex items-center gap-4 text-white text-[11px] font-bold tracking-[0.3em] uppercase mt-4"
@@ -102,8 +90,6 @@ const ArticleHero = ({ article, onClick }) => {
             </motion.button>
           </div>
         </div>
-
-        {/* Subtle Shine Effect */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
           animate={{ opacity: hovered ? 1 : 0 }}
@@ -115,5 +101,4 @@ const ArticleHero = ({ article, onClick }) => {
     </motion.div>
   );
 };
-
 export default ArticleHero;

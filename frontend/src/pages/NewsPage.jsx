@@ -28,7 +28,7 @@ const NewsPage = () => {
 
   const fetchArticles = (url = null) => {
     const isInitial = !url;
-    let targetUrl = url || `${import.meta.env.VITE_API_BASE_URL}/articles/`;
+    let targetUrl = url || 'http://localhost:8001/api/articles/';
 
     // Add filtering params to initial fetch
     if (isInitial) {

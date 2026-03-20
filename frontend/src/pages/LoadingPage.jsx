@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
 const LOG_ENTRIES = [
   'Initializing archives...',
   'Retrieving latest chronicles...',
@@ -10,7 +9,6 @@ const LOG_ENTRIES = [
   'Optimizing streams...',
   'AEP_CORE: Ready',
 ];
-
 const HEX_Diagnostic = () => {
   const [hex, setHex] = useState('0x0000');
   useEffect(() => {
@@ -21,22 +19,17 @@ const HEX_Diagnostic = () => {
   }, []);
   return <span className="text-[7px] font-mono text-white/5">{hex}</span>;
 }
-
 const LoadingPage = () => {
   const navigate = useNavigate();
   const [logIndex, setLogIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [progress, setProgress] = useState(0);
-
-  // REAL 0-100 PROGRESS WITH VARIABLE SPEED
   useEffect(() => {
     let current = 0;
     const interval = setInterval(() => {
-      // Vary the jump size for a "processing" feel
       const jump = Math.random() < 0.2 ? Math.random() * 8 : Math.random() * 2;
       current = Math.min(current + jump, 100);
       setProgress(current);
-
       if (current >= 100) {
         clearInterval(interval);
         setTimeout(() => navigate('/news'), 500);
@@ -44,8 +37,6 @@ const LoadingPage = () => {
     }, 60);
     return () => clearInterval(interval);
   }, [navigate]);
-
-  // TYPING LOGS
   useEffect(() => {
     const entry = LOG_ENTRIES[logIndex] || '';
     let i = 0;
@@ -61,11 +52,8 @@ const LoadingPage = () => {
     }, 30);
     return () => clearInterval(t);
   }, [logIndex]);
-
   return (
     <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-[2000] overflow-hidden">
-
-      {/* CORNER DIAGNOSTICS */}
       <div className="absolute top-8 left-8 flex flex-col">
         <span className="text-[8px] tracking-widest uppercase text-white/10 font-bold mb-1">System status</span>
         <div className="flex gap-4">
@@ -74,19 +62,14 @@ const LoadingPage = () => {
           <HEX_Diagnostic />
         </div>
       </div>
-
-      {/* BACKGROUND GRID OVERLAY */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
           backgroundSize: '40px 40px'
         }} />
-
       <div className="w-full max-w-md px-10 flex flex-col gap-10 relative z-10">
-
-        {/* LOGO SECTION */}
         <div className="flex flex-col items-center gap-6">
-          <div className="flex overflow-hidden relative">
+          <div className="flex overflow-hidden relative px-4 -mx-4 pb-4 -mb-4">
             {"AEP".split("").map((char, i) => (
               <motion.span
                 key={i}
@@ -107,8 +90,6 @@ const LoadingPage = () => {
             />
           </div>
         </div>
-
-        {/* PROGRESS BLOCK */}
         <div className="flex flex-col gap-5 mt-4">
           <div className="flex items-end justify-between">
             <div className="flex flex-col gap-1">
@@ -121,9 +102,7 @@ const LoadingPage = () => {
               {Math.floor(progress).toString().padStart(3, '0')}
             </span>
           </div>
-
           <div className="relative">
-            {/* MAIN PROGRESS BAR */}
             <div className="h-1 w-full bg-white/5 relative overflow-hidden border border-white/10">
               <motion.div
                 className="absolute left-0 top-0 h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]"
@@ -131,19 +110,15 @@ const LoadingPage = () => {
                 transition={{ duration: 0.2, ease: "easeOut" }}
               />
             </div>
-
-            {/* SECONDARY GHOST BAR (SHADOW) */}
             <div className="h-px w-full bg-transparent mt-2 relative overflow-hidden">
               <motion.div
                 className="absolute left-0 top-0 h-full bg-white/30"
-                animate={{ width: `${progress * 1.1}%` }} // Slightly faster ghost
+                animate={{ width: `${progress * 1.1}%` }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               />
             </div>
           </div>
         </div>
-
-        {/* BOTTOM TAG */}
         <div className="flex flex-col items-center gap-2">
           <motion.span
             animate={{ opacity: [0.2, 0.5, 0.2] }}
@@ -157,8 +132,6 @@ const LoadingPage = () => {
           </div>
         </div>
       </div>
-
-      {/* FOOTER Diagnostic */}
       <div className="absolute bottom-8 right-8 text-[8px] font-mono text-white/10 tracking-widest uppercase flex gap-8">
         <span>VER: 1.0.4-CLONE</span>
         <span>AEP_CORE_SYNC: ACTIVE</span>
@@ -166,5 +139,4 @@ const LoadingPage = () => {
     </div>
   );
 };
-
 export default LoadingPage;

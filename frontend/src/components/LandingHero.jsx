@@ -2,9 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 gsap.registerPlugin(ScrollTrigger);
-
 const LandingHero = ({ total = 0 }) => {
   const word = "CHRONICLES";
   const containerRef = useRef(null);
@@ -13,23 +11,18 @@ const LandingHero = ({ total = 0 }) => {
   const counterRef = useRef(null);
   const headlineRef = useRef(null);
   const metaRef = useRef(null);
-
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Static animations (only run once)
       gsap.to(tickerRef.current, {
         x: '-50%',
         duration: 22,
         ease: 'none',
         repeat: -1,
       });
-
       gsap.fromTo(lineRef.current,
         { scaleX: 0 },
         { scaleX: 1, duration: 1.6, delay: 1.4, ease: 'power4.inOut', transformOrigin: 'left center' }
       );
-
-      // SCROLL ANIMATIONS
       gsap.to(headlineRef.current, {
         y: -100,
         opacity: 0,
@@ -41,7 +34,6 @@ const LandingHero = ({ total = 0 }) => {
           scrub: true,
         }
       });
-
       gsap.to(tickerRef.current.parentElement, {
         opacity: 0,
         y: -50,
@@ -52,7 +44,6 @@ const LandingHero = ({ total = 0 }) => {
           scrub: true,
         }
       });
-
       gsap.to(metaRef.current, {
         opacity: 0,
         y: 50,
@@ -64,20 +55,16 @@ const LandingHero = ({ total = 0 }) => {
         }
       });
     }, containerRef);
-
     return () => ctx.revert();
-  }, []); // Run static once
-
-  // Separate EFFECT for COUNTER tracking total
+  }, []); 
   useEffect(() => {
     if (total === 0) return;
-
     const ctx = gsap.context(() => {
       const obj = { val: 0 };
       gsap.to(obj, {
         val: 1,
         duration: 2.2,
-        delay: 0.5, // Faster start since total is now available
+        delay: 0.5, 
         ease: 'power2.out',
         onUpdate: () => {
           if (counterRef.current) {
@@ -86,39 +73,32 @@ const LandingHero = ({ total = 0 }) => {
         }
       });
     }, containerRef);
-
     return () => ctx.revert();
   }, [total]);
-
   const tickerItems = Array(4).fill([
     'Breaking — New edition now live', 'Editorial', 'World',
     'Culture', 'Opinion', 'Science', 'Technology', 'Archives',
   ]).flat();
-
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,400&family=DM+Sans:wght@400;500&display=swap');
-
         .hero-root {
           font-family: 'DM Sans', sans-serif;
           background: #000;
           color: #fff;
         }
-
         .ticker-wrap {
           overflow: hidden;
           border-top: 1px solid rgba(255,255,255,0.1);
           border-bottom: 1px solid rgba(255,255,255,0.1);
           flex-shrink: 0;
         }
-
         .ticker-inner {
           display: flex;
           white-space: nowrap;
           width: max-content;
         }
-
         .ticker-item {
           font-size: 9px;
           letter-spacing: 0.2em;
@@ -127,21 +107,17 @@ const LandingHero = ({ total = 0 }) => {
           font-weight: 500;
           color: rgba(255,255,255,0.35);
         }
-
         .ticker-item::after {
           content: '·';
           margin-left: 32px;
           opacity: 0.25;
         }
-
         .divider {
           height: 1px;
           background: rgba(255,255,255,0.15);
           transform-origin: left center;
           flex-shrink: 0;
         }
-
-        /* Single-line headline — scales with viewport, never wraps */
         .headline {
           font-family: 'Playfair Display', serif;
           font-weight: 900;
@@ -149,20 +125,16 @@ const LandingHero = ({ total = 0 }) => {
           letter-spacing: -0.02em;
           color: #fff;
           white-space: nowrap;
-          /* fluid: 36px at 320px wide → 148px at 1280px wide */
           font-size: clamp(36px, 11.25vw, 148px);
         }
-
         .headline-italic {
           font-family: 'Playfair Display', serif;
           font-style: italic;
           font-weight: 400;
           color: rgba(255,255,255,0.45);
-          /* roughly half the main headline */
           font-size: clamp(20px, 5.5vw, 72px);
           line-height: 1.1;
         }
-
         .meta {
           font-size: 9px;
           letter-spacing: 0.22em;
@@ -170,7 +142,6 @@ const LandingHero = ({ total = 0 }) => {
           font-weight: 500;
           color: rgba(255,255,255,0.28);
         }
-
         .badge {
           border: 1px solid rgba(255,255,255,0.18);
           padding: 5px 12px;
@@ -181,7 +152,6 @@ const LandingHero = ({ total = 0 }) => {
           color: rgba(255,255,255,0.35);
           flex-shrink: 0;
         }
-
         .scroll-line {
           width: 1px;
           height: 36px;
@@ -189,7 +159,6 @@ const LandingHero = ({ total = 0 }) => {
           transform-origin: top center;
           flex-shrink: 0;
         }
-
         .col-rule {
           width: 1px;
           background: #fff;
@@ -199,7 +168,6 @@ const LandingHero = ({ total = 0 }) => {
           pointer-events: none;
         }
       `}</style>
-
       <div
         ref={containerRef}
         className="hero-root relative flex flex-col overflow-hidden select-none"
@@ -207,11 +175,7 @@ const LandingHero = ({ total = 0 }) => {
       >
         <div className="col-rule" style={{ left: '33.33%' }} />
         <div className="col-rule" style={{ left: '66.66%' }} />
-
-        {/* Navbar spacer */}
         <div className="shrink-0" style={{ height: '90px' }} />
-
-        {/* TICKER */}
         <div className="ticker-wrap">
           <div ref={tickerRef} className="ticker-inner">
             {tickerItems.map((item, i) => (
@@ -219,13 +183,10 @@ const LandingHero = ({ total = 0 }) => {
             ))}
           </div>
         </div>
-
-        {/* HERO BODY */}
         <div
           className="relative z-10 flex flex-col justify-center flex-1 px-6 md:px-14"
           style={{ paddingTop: '6vh', paddingBottom: '4vh' }}
         >
-          {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -236,8 +197,6 @@ const LandingHero = ({ total = 0 }) => {
             <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
             <div className="badge">New</div>
           </motion.div>
-
-          {/* Headline — single line, never breaks */}
           <div className="overflow-hidden mb-1" ref={headlineRef}>
             <motion.div
               initial={{ y: '105%' }}
@@ -247,8 +206,6 @@ const LandingHero = ({ total = 0 }) => {
               <span className="headline">{word}</span>
             </motion.div>
           </div>
-
-          {/* Italic sub */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -257,11 +214,7 @@ const LandingHero = ({ total = 0 }) => {
           >
             <span className="headline-italic">of record.</span>
           </motion.div>
-
-          {/* Rule */}
           <div ref={lineRef} className="divider" style={{ marginBottom: '4vh' }} />
-
-          {/* Meta row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -280,8 +233,6 @@ const LandingHero = ({ total = 0 }) => {
             </div>
           </motion.div>
         </div>
-
-        {/* BOTTOM BAR */}
         <motion.div
           ref={metaRef}
           initial={{ opacity: 0 }}
@@ -301,5 +252,4 @@ const LandingHero = ({ total = 0 }) => {
     </>
   );
 };
-
 export default LandingHero;
