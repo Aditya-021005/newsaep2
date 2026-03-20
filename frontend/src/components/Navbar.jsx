@@ -67,7 +67,7 @@ const Navbar = ({ onSearchClick }) => {
               className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none z-[10006]"
             >
               <motion.span
-                animate={isMenuOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
+                animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
                 className="w-6 h-0.5 bg-white block"
               />
               <motion.span
@@ -75,7 +75,7 @@ const Navbar = ({ onSearchClick }) => {
                 className="w-6 h-0.5 bg-white block"
               />
               <motion.span
-                animate={isMenuOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }}
+                animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
                 className="w-6 h-0.5 bg-white block"
               />
             </button>
