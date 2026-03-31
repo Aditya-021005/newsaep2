@@ -4,8 +4,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     volumes:
-      - /app/db.sqlite3 # Persistent database file
-      - /app/media # Persistent media files
+      - ./backend/db.sqlite3:/app/db.sqlite3
+      - ./backend/media:/app/media
     environment:
       - DJANGO_DEBUG=False
       - ALLOWED_HOSTS=13.62.76.2,localhost,127.0.0.1
