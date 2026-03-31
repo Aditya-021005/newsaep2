@@ -1,0 +1,8 @@
+node_modules
+venv
+.venv
+dist
+build
+backend/db.sqlite3
+frontend/.env
+*.log

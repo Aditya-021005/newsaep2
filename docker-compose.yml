@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DEBUG=True
+    command: python manage.py runserver 0.0.0.0:8000
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Anonymous volume to prevent host node_modules from overwriting container's
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    stdin_open: true # Support interactive mode for Vite
+    tty: true
+    depends_on:
+      - backend

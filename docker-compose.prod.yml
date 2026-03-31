@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    volumes:
+      - /app/db.sqlite3 # Persistent database file
+      - /app/media # Persistent media files
+    environment:
+      - DJANGO_DEBUG=False
+      - ALLOWED_HOSTS=13.62.76.2,localhost,127.0.0.1
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
