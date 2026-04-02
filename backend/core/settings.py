@@ -8,16 +8,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-=c7u-y%fble-9406&f0kgh-%or6*thlw+mhd1ewh-#h@sx+)7#'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-=c7u-y%fble-9406&f0kgh-%or6*thlw+mhd1ewh-#h@sx+)7#')
 import os
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '13.62.76.2',
-    'aditya.pe',
-    'www.aditya.pe',
-]
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -86,16 +81,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://13.62.76.2',
-    'https://13.62.76.2',
-    'http://aditya.pe',
-    'https://aditya.pe',
-    'http://www.aditya.pe',
-    'https://www.aditya.pe',
-]
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',')
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,

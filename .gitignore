@@ -24,6 +24,7 @@ backend/venv/
 backend/.env
 venv/
 .env
+.env.prod
 frontend/.env.production
 
 # Node

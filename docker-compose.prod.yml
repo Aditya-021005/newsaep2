@@ -6,17 +6,20 @@ services:
     volumes:
       - ./backend/db.sqlite3:/app/db.sqlite3
       - ./backend/media:/app/media
-    environment:
-      - DJANGO_DEBUG=False
-      - ALLOWED_HOSTS=13.62.76.2,localhost,127.0.0.1
+    env_file:
+      - .env.prod
     restart: always
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
     ports:
       - "80:80"
     depends_on:
       - backend
+    env_file:
+      - .env.prod
     restart: always
