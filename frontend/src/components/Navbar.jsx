@@ -90,7 +90,7 @@ const Navbar = ({ onSearchClick }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[10002] bg-black flex flex-col items-center justify-center p-8 md:hidden"
+            className="fixed inset-0 z-30 bg-black flex flex-col items-center justify-center p-8 md:hidden"
           >
             <div className="flex flex-col items-center gap-12">
               {navLinks.map((link, i) => (
