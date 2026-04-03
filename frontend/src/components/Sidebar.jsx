@@ -42,14 +42,14 @@ const Sidebar = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[20000]"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
           />
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/10 z-[20001] flex flex-col shadow-2xl overflow-y-auto"
+            className="fixed top-0 right-0 h-full w-full max-w-sm bg-black border-l border-white/10 z-[110] flex flex-col shadow-2xl overflow-y-auto"
           >
             <div className="p-8 flex items-center justify-between border-b border-white/10 shrink-0">
               <span className="text-[10px] tracking-[0.6em] uppercase text-white/40 font-bold">

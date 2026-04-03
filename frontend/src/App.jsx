@@ -80,18 +80,6 @@ const AppContent = () => {
       <div className="noir-grain" />
       <CustomCursor />
       
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        onSearch={handleSidebarSearch}
-        currentCategory={searchParams.get('category')}
-        onCategoryChange={handleSidebarCategory}
-        currentEvent={searchParams.get('event_category')}
-        onEventChange={handleSidebarEvent}
-        currentYear={searchParams.get('event_year')}
-        onYearChange={handleSidebarYear}
-      />
-
       <div
         className="fixed inset-0 z-0 bg-black pointer-events-none overflow-hidden transition-opacity duration-1000"
         style={{
@@ -111,7 +99,7 @@ const AppContent = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="relative z-[10005]"
+            className="relative z-40"
           >
             <Navbar onSearchClick={() => setIsSidebarOpen(true)} />
           </motion.div>
@@ -122,8 +110,8 @@ const AppContent = () => {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<LoadingPage />} />
-            <Route path="/news" element={<PageTransition><NewsPage /></PageTransition>} />
-            <Route path="/issues" element={<PageTransition><IssuesPage /></PageTransition>} />
+            <Route path="/news" element={<PageTransition><NewsPage onOpenSidebar={() => setIsSidebarOpen(true)} /></PageTransition>} />
+            <Route path="/issues" element={<PageTransition><IssuesPage onOpenSidebar={() => setIsSidebarOpen(true)} /></PageTransition>} />
             <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
           </Routes>
@@ -145,6 +133,18 @@ const AppContent = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onSearch={handleSidebarSearch}
+        currentCategory={searchParams.get('category')}
+        onCategoryChange={handleSidebarCategory}
+        currentEvent={searchParams.get('event_category')}
+        onEventChange={handleSidebarEvent}
+        currentYear={searchParams.get('event_year')}
+        onYearChange={handleSidebarYear}
+      />
     </div>
   );
 };

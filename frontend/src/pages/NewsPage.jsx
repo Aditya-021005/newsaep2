@@ -6,15 +6,13 @@ import ArticleDetail from '../components/ArticleDetail';
 import { SkeletonCard, SkeletonHero } from '../components/SkeletonLoader';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSearchParams } from 'react-router-dom';
 import LandingHero from '../components/LandingHero';
-import Sidebar from '../components/Sidebar';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NewsPage = () => {
+const NewsPage = ({ onOpenSidebar }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search');
   const categoryFilter = searchParams.get('category');
@@ -27,7 +25,6 @@ const NewsPage = () => {
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const containerRef = useRef(null);
 
   const fetchArticles = (url = null) => {
@@ -67,13 +64,6 @@ const NewsPage = () => {
     fetchArticles();
   }, [searchQuery, categoryFilter, eventFilter, yearFilter]);
 
-  const updateFilters = (key, value) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (value) newParams.set(key, value);
-    else newParams.delete(key);
-    setSearchParams(newParams);
-  };
-
   return (
     <div ref={containerRef} className="min-h-screen relative overflow-hidden">
       <div className="absolute left-[5%] arch-line-v opacity-50" />
@@ -81,9 +71,9 @@ const NewsPage = () => {
 
       {(!searchQuery && !categoryFilter && !eventFilter && !yearFilter) && <LandingHero total={totalCount} />}
 
-      <div className="fixed bottom-10 right-10 z-[1000] lg:hidden">
+      <div className="fixed bottom-10 right-10 z-30 lg:hidden">
         <button 
-          onClick={() => setIsSidebarOpen(true)}
+          onClick={onOpenSidebar}
           className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl font-bold text-xs tracking-tighter"
         >
           FILTERS
@@ -111,7 +101,7 @@ const NewsPage = () => {
                   {articles.length} RECAPS FOUND
                 </span>
                 <button 
-                  onClick={() => setIsSidebarOpen(true)}
+                  onClick={onOpenSidebar}
                   className="hidden lg:block px-6 py-2 border border-white/10 text-[10px] tracking-widest uppercase text-white/60 hover:border-white transition-all"
                 >
                   Modify Filters
@@ -199,18 +189,6 @@ const NewsPage = () => {
           </div>
         )}
       </div>
-
-      <Sidebar 
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        onSearch={(v) => updateFilters('search', v)}
-        currentCategory={categoryFilter}
-        onCategoryChange={(v) => updateFilters('category', v)}
-        currentEvent={eventFilter}
-        onEventChange={(v) => updateFilters('event_category', v)}
-        currentYear={yearFilter}
-        onYearChange={(v) => updateFilters('event_year', v)}
-      />
 
       <ArticleDetail article={selectedArticle} isOpen={!!selectedArticle} onClose={() => setSelected(null)} />
     </div>

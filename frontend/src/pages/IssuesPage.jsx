@@ -3,10 +3,9 @@ import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import PDFFlipbook from '../components/PDFFlipbook';
-import Sidebar from '../components/Sidebar';
 import CornerAccents from '../components/CornerAccents';
 
-const IssuesPage = () => {
+const IssuesPage = ({ onOpenSidebar }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const eventFilter = searchParams.get('event_category');
   const yearFilter = searchParams.get('event_year');
@@ -14,7 +13,6 @@ const IssuesPage = () => {
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedIssue, setSelectedIssue] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchIssues();
@@ -89,7 +87,7 @@ const IssuesPage = () => {
               </div>
           </div>
           <button 
-            onClick={() => setIsSidebarOpen(true)}
+            onClick={onOpenSidebar}
             className="px-8 py-3 bg-white text-black font-bold text-[10px] tracking-widest uppercase hover:bg-white/90 transition-all"
           >
               Adjust Parameters
@@ -161,14 +159,13 @@ const IssuesPage = () => {
         )}
       </div>
 
-      {/* PDF Viewer Portal/Modal */}
       <AnimatePresence>
         {selectedIssue && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100000] bg-black/98 backdrop-blur-3xl overflow-y-auto"
+            className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-3xl overflow-y-auto"
           >
             <div className="min-h-screen flex flex-col">
                 <div className="p-8 flex items-center justify-between border-b border-white/10">
@@ -200,18 +197,6 @@ const IssuesPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <Sidebar 
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        onSearch={(v) => console.log('Search in news', v)} // Optional: redir to news?
-        currentCategory={null}
-        onCategoryChange={(v) => console.log('Cat', v)}
-        currentEvent={eventFilter}
-        onEventChange={(v) => updateFilters('event_category', v)}
-        currentYear={yearFilter}
-        onYearChange={(v) => updateFilters('event_year', v)}
-      />
     </div>
   );
 };
