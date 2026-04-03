@@ -36,7 +36,7 @@ const Footer = () => {
           <div className="md:col-span-6 flex flex-col gap-6">
             <div className="flex flex-col gap-1">
               <span className="font-serif text-3xl font-bold tracking-tighter">
-                AEP CHRONICLES
+                EPC CHRONICLES
               </span>
               <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-medium">
                 Official Journal of Apogee English Press

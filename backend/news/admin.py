@@ -1,15 +1,30 @@
 from django.contrib import admin
-from .models import Article, ContactMessage
+from .models import Article, ContactMessage, ArticleImage, Issue
+
+class ArticleImageInline(admin.TabularInline):
+    model = ArticleImage
+    extra = 1
+
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'published_date', 'has_image_file')
-    list_filter = ('category', 'published_date')
+    list_display = ('title', 'event_category', 'event_year', 'category', 'published_date', 'has_image_file')
+    list_filter = ('event_category', 'event_year', 'category', 'published_date')
     search_fields = ('title', 'content', 'summary')
     ordering = ('-published_date',)
+    inlines = [ArticleImageInline]
+
     def has_image_file(self, obj):
-        return bool(obj.image_file)
+        return bool(obj.image_file) or obj.images.exists()
+    
     has_image_file.boolean = True
-    has_image_file.short_description = 'Uploaded'
+    has_image_file.short_description = 'Has Images'
+
+@admin.register(Issue)
+class IssueAdmin(admin.ModelAdmin):
+    list_display = ('title', 'event_category', 'event_year', 'published_date')
+    list_filter = ('event_category', 'event_year')
+    search_fields = ('title',)
+
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'created_at')

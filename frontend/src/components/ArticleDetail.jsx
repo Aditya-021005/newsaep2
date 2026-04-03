@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+
 const ArticleDetail = ({ article, isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
   const [lastArticle, setLastArticle] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
   React.useEffect(() => {
-    if (article) setLastArticle(article);
+    if (article) {
+      setLastArticle(article);
+      setActiveImageIndex(0);
+    }
   }, [article]);
+
   const activeArticle = article || lastArticle;
   if (!activeArticle) return null;
+
   const content = activeArticle.content || '';
   const summary = activeArticle.summary || '';
   const wordCount = (content + ' ' + summary).split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
   let dateStr = '';
   try {
     const d = new Date(activeArticle.published_date);
     dateStr = isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
   } catch { dateStr = ''; }
+
   const paragraphs = content.split('\n').filter(p => p.trim());
+
+  // Combine main image and gallery images
+  const allImages = [
+    { url: activeArticle.image_url, caption: 'Main Image' },
+    ...(activeArticle.images || []).map(img => ({ url: img.image_url, caption: img.caption }))
+  ].filter(img => img.url);
+
   const fallbackCopyTextToClipboard = (text) => {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -49,6 +66,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
     }
     document.body.removeChild(textArea);
   };
+
   const handleShare = (platform) => {
     const url = window.location.href;
     const title = activeArticle.title || '';
@@ -63,6 +81,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
       }
     }
   };
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -84,6 +103,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
           >
             <span className="text-xl md:text-2xl font-light">✕</span>
           </motion.button>
+
           <div className="absolute inset-0 overflow-y-auto" onClick={onClose}>
             <div className="min-h-screen flex items-start justify-center p-0 md:p-12">
               <motion.div
@@ -94,19 +114,66 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                 onClick={e => e.stopPropagation()}
                 className="w-full max-w-5xl bg-black border-x border-b border-white/10 overflow-hidden relative shadow-2xl"
               >
-                <div className="relative h-[35vh] md:h-[50vh] overflow-hidden">
-                  <img
-                    src={activeArticle.image_url}
-                    alt={activeArticle.title}
-                    className="w-full h-full object-cover grayscale brightness-75 transition-all duration-700"
-                  />
+                {/* Hero / Gallery Section */}
+                <div className="relative h-[40vh] md:h-[60vh] overflow-hidden group">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={activeImageIndex}
+                      initial={{ opacity: 0, scale: 1.1 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.6 }}
+                      src={allImages[activeImageIndex]?.url}
+                      alt={allImages[activeImageIndex]?.caption || activeArticle.title}
+                      className="w-full h-full object-cover grayscale brightness-75"
+                    />
+                  </AnimatePresence>
+                  
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                  <div className="absolute top-6 left-6 md:top-8 md:left-8 z-10">
-                    <span className="px-3 py-2 md:px-5 md:py-2.5 bg-white text-black text-[10px] md:text-[11px] font-bold tracking-[0.5em] uppercase shadow-2xl">
-                      {activeArticle.category || 'Archive'}
+                  
+                  <div className="absolute top-6 left-6 md:top-8 md:left-8 z-10 flex flex-col gap-4">
+                    <span className="self-start px-3 py-2 md:px-5 md:py-2.5 bg-white text-black text-[10px] md:text-[11px] font-bold tracking-[0.5em] uppercase shadow-2xl">
+                      {activeArticle.event_category || activeArticle.category || 'Archive'}
                     </span>
+                    {activeArticle.event_year && (
+                        <span className="self-start px-3 py-1 border border-white/20 bg-black/40 backdrop-blur-md text-white text-[9px] font-bold tracking-[0.3em] uppercase">
+                            {activeArticle.event_year}
+                        </span>
+                    )}
                   </div>
+
+                  {/* Gallery Navigation Controls */}
+                  {allImages.length > 1 && (
+                    <>
+                        <div className="absolute inset-y-0 left-0 w-24 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); setActiveImageIndex(prev => (prev - 1 + allImages.length) % allImages.length); }}
+                                className="w-12 h-12 flex items-center justify-center bg-black/50 text-white hover:bg-white hover:text-black transition-all"
+                            >
+                                ←
+                            </button>
+                        </div>
+                        <div className="absolute inset-y-0 right-0 w-24 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); setActiveImageIndex(prev => (prev + 1) % allImages.length); }}
+                                className="w-12 h-12 flex items-center justify-center bg-black/50 text-white hover:bg-white hover:text-black transition-all"
+                            >
+                                →
+                            </button>
+                        </div>
+                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+                            {allImages.map((_, idx) => (
+                                <button 
+                                    key={idx}
+                                    onClick={(e) => { e.stopPropagation(); setActiveImageIndex(idx); }}
+                                    className={`w-1.5 h-1.5 rounded-full transition-all ${idx === activeImageIndex ? 'bg-white w-6 shadow-[0_0_10px_white]' : 'bg-white/30'}`}
+                                />
+                            ))}
+                        </div>
+                    </>
+                  )}
                 </div>
+
                 <div className="p-6 md:p-16 lg:p-24 bg-black">
                   <div className="grid grid-cols-2 md:flex md:items-center gap-y-8 gap-x-12 mb-12 border-b border-white/10 pb-12">
                     <div className="flex flex-col gap-1">
@@ -122,6 +189,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                       <span className="text-white text-[11px] md:text-xs font-mono">#{activeArticle.id.toString().padStart(4, '0')}</span>
                     </div>
                   </div>
+
                   <div className="max-w-3xl mx-auto mb-16 text-center">
                     <h1 className="font-serif text-4xl md:text-7xl font-bold tracking-tighter text-white mb-8 leading-none">
                       {activeArticle.title}
@@ -132,6 +200,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                       </p>
                     )}
                   </div>
+
                   <div className="max-w-2xl mx-auto prose prose-invert prose-white">
                     {paragraphs.map((para, i) => (
                       <p key={i} className="text-white/70 text-lg leading-relaxed mb-8 first-letter:text-4xl first-letter:font-serif first-letter:mr-2">
@@ -139,6 +208,7 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
                       </p>
                     ))}
                   </div>
+
                   <div className="mt-20 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] tracking-[0.4em] uppercase text-white/20 font-bold text-center md:text-left">
@@ -177,4 +247,5 @@ const ArticleDetail = ({ article, isOpen, onClose }) => {
     document.body
   );
 };
+
 export default ArticleDetail;

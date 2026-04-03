@@ -10,13 +10,16 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useSearchParams } from 'react-router-dom';
 import LandingHero from '../components/LandingHero';
+import Sidebar from '../components/Sidebar';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const NewsPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search');
   const categoryFilter = searchParams.get('category');
+  const eventFilter = searchParams.get('event_category');
+  const yearFilter = searchParams.get('event_year');
 
   const [articles, setArticles] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -24,17 +27,19 @@ const NewsPage = () => {
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const containerRef = useRef(null);
 
   const fetchArticles = (url = null) => {
     const isInitial = !url;
     let targetUrl = url || `${import.meta.env.VITE_API_BASE_URL || '/api'}/articles/`;
 
-    // Add filtering params to initial fetch
     if (isInitial) {
       const p = new URLSearchParams();
       if (searchQuery) p.append('search', searchQuery);
       if (categoryFilter) p.append('category', categoryFilter);
+      if (eventFilter) p.append('event_category', eventFilter);
+      if (yearFilter) p.append('event_year', yearFilter);
       const queryString = p.toString();
       if (queryString) targetUrl += `?${queryString}`;
     }
@@ -60,34 +65,62 @@ const NewsPage = () => {
 
   useEffect(() => {
     fetchArticles();
-  }, [searchQuery, categoryFilter]);
+  }, [searchQuery, categoryFilter, eventFilter, yearFilter]);
+
+  const updateFilters = (key, value) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (value) newParams.set(key, value);
+    else newParams.delete(key);
+    setSearchParams(newParams);
+  };
 
   return (
     <div ref={containerRef} className="min-h-screen relative overflow-hidden">
-      { }
       <div className="absolute left-[5%] arch-line-v opacity-50" />
       <div className="absolute right-[5%] arch-line-v opacity-50" />
 
-      {(!searchQuery && !categoryFilter) && <LandingHero total={totalCount} />}
+      {(!searchQuery && !categoryFilter && !eventFilter && !yearFilter) && <LandingHero total={totalCount} />}
 
-      <div className={`container mx-auto px-4 sm:px-6 relative pb-20 ${(searchQuery || categoryFilter) ? 'pt-40' : 'pt-32'}`}>
+      <div className="fixed bottom-10 right-10 z-[1000] lg:hidden">
+        <button 
+          onClick={() => setIsSidebarOpen(true)}
+          className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-2xl font-bold text-xs tracking-tighter"
+        >
+          FILTERS
+        </button>
+      </div>
 
-        { }
-        {(searchQuery || categoryFilter) && (
+      <div className={`container mx-auto px-4 sm:px-6 relative pb-20 ${(searchQuery || categoryFilter || eventFilter || yearFilter) ? 'pt-40' : 'pt-32'}`}>
+
+        {(searchQuery || categoryFilter || eventFilter || yearFilter) && (
           <div className="mb-16 flex flex-col gap-4">
             <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-bold">
               Secure Search Results
             </span>
-            <div className="flex items-end justify-between border-b border-white/10 pb-8">
-              <h2 className="font-serif text-4xl md:text-6xl font-bold tracking-tighter text-white">
-                {searchQuery ? `"${searchQuery}"` : categoryFilter}
-              </h2>
-              <span className="text-[11px] font-mono text-white/30 uppercase tracking-widest pb-2">
-                {articles.length} RECAPS FOUND
-              </span>
+            <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-8 gap-6">
+              <div className="flex flex-col gap-2">
+                <h2 className="font-serif text-4xl md:text-6xl font-bold tracking-tighter text-white">
+                  {searchQuery ? `"${searchQuery}"` : (eventFilter ? `${eventFilter} ${yearFilter || ''}` : categoryFilter || 'All Archives')}
+                </h2>
+                {categoryFilter && eventFilter && (
+                   <span className="text-[10px] tracking-widest text-white/40 uppercase">Category: {categoryFilter}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-6">
+                <span className="text-[11px] font-mono text-white/30 uppercase tracking-widest">
+                  {articles.length} RECAPS FOUND
+                </span>
+                <button 
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="hidden lg:block px-6 py-2 border border-white/10 text-[10px] tracking-widest uppercase text-white/60 hover:border-white transition-all"
+                >
+                  Modify Filters
+                </button>
+              </div>
             </div>
           </div>
         )}
+        
         {loading ? (
           <div className="flex flex-col gap-12">
             <SkeletonHero />
@@ -101,36 +134,51 @@ const NewsPage = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-12">
-            {articles.length > 0 && <ArticleHero article={articles[0]} onClick={setSelected} />}
-            <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-5 md:gap-8 article-grid">
-              {(() => {
-                const slice = articles.slice(1);
-                return slice.map((article, idx) => {
-                  const remaining = slice.length - idx;
-                  const pos = idx % 5;
-                  let dSpan = 'lg:col-span-4', dRow = 'lg:row-span-1', mSpan = 'col-span-1', variant = 'compact', isTall = false;
-                  if (pos === 0) {
-                    if (remaining === 1) { dSpan = 'lg:col-span-12'; mSpan = 'col-span-2'; variant = 'full'; }
-                    else { dSpan = 'lg:col-span-8'; dRow = 'lg:row-span-2'; mSpan = 'col-span-2'; variant = 'full'; isTall = true; }
-                  } else if (pos === 1) { dSpan = 'lg:col-span-4'; mSpan = 'col-span-1'; }
-                  else if (pos === 2) { dSpan = 'lg:col-span-4'; mSpan = 'col-span-1'; }
-                  else if (pos === 3) { dSpan = remaining === 1 ? 'lg:col-span-12' : 'lg:col-span-6'; mSpan = remaining === 1 ? 'col-span-2' : 'col-span-2 md:col-span-1 lg:col-span-6'; variant = 'full'; }
-                  else if (pos === 4) { dSpan = 'lg:col-span-6'; mSpan = 'col-span-2 md:col-span-1 lg:col-span-6'; variant = 'full'; }
-                  return (
-                    <motion.div
-                      key={article.id}
-                      className={`${mSpan} ${dSpan} ${dRow} article-grid-item`}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-10%" }}
-                      transition={{ duration: 0.6, delay: (idx % 3) * 0.1 }}
+            {articles.length > 0 ? (
+              <>
+                <ArticleHero article={articles[0]} onClick={setSelected} />
+                <div className="grid grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-5 md:gap-8 article-grid">
+                  {(() => {
+                    const slice = articles.slice(1);
+                    return slice.map((article, idx) => {
+                      const remaining = slice.length - idx;
+                      const pos = idx % 5;
+                      let dSpan = 'lg:col-span-4', dRow = 'lg:row-span-1', mSpan = 'col-span-1', variant = 'compact', isTall = false;
+                      if (pos === 0) {
+                        if (remaining === 1) { dSpan = 'lg:col-span-12'; mSpan = 'col-span-2'; variant = 'full'; }
+                        else { dSpan = 'lg:col-span-8'; dRow = 'lg:row-span-2'; mSpan = 'col-span-2'; variant = 'full'; isTall = true; }
+                      } else if (pos === 1) { dSpan = 'lg:col-span-4'; mSpan = 'col-span-1'; }
+                      else if (pos === 2) { dSpan = 'lg:col-span-4'; mSpan = 'col-span-1'; }
+                      else if (pos === 3) { dSpan = remaining === 1 ? 'lg:col-span-12' : 'lg:col-span-6'; mSpan = remaining === 1 ? 'col-span-2' : 'col-span-2 md:col-span-1 lg:col-span-6'; variant = 'full'; }
+                      else if (pos === 4) { dSpan = 'lg:col-span-6'; mSpan = 'col-span-2 md:col-span-1 lg:col-span-6'; variant = 'full'; }
+                      return (
+                        <motion.div
+                          key={article.id}
+                          className={`${mSpan} ${dSpan} ${dRow} article-grid-item`}
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-10%" }}
+                          transition={{ duration: 0.6, delay: (idx % 3) * 0.1 }}
+                        >
+                          <ArticleCard article={article} onClick={setSelected} variant={variant} isTall={isTall} />
+                        </motion.div>
+                      );
+                    });
+                  })()}
+                </div>
+              </>
+            ) : (
+                <div className="min-h-[40vh] flex flex-col items-center justify-center text-center py-20 border border-dashed border-white/10">
+                    <span className="text-4xl md:text-6xl font-serif italic text-white/5 mb-4">No records found</span>
+                    <p className="text-white/20 text-[10px] tracking-widest uppercase">Try adjusting your filters or search query</p>
+                    <button 
+                        onClick={() => setSearchParams({})}
+                        className="mt-8 px-8 py-3 bg-white/5 text-white/40 text-[10px] tracking-widest uppercase hover:bg-white hover:text-black transition-all"
                     >
-                      <ArticleCard article={article} onClick={setSelected} variant={variant} isTall={isTall} />
-                    </motion.div>
-                  );
-                });
-              })()}
-            </div>
+                        Reset All Filters
+                    </button>
+                </div>
+            )}
           </div>
         )}
 
@@ -145,12 +193,24 @@ const NewsPage = () => {
               {loadingMore ? 'Loading...' : 'Load More Articles'}
             </button>
           </div>
-        ) : !loading && (
+        ) : (!loading && articles.length > 0) && (
           <div className="mt-20 py-10 text-center text-white/20 text-[10px] uppercase tracking-[0.5em]">
             End of Chronicles
           </div>
         )}
       </div>
+
+      <Sidebar 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onSearch={(v) => updateFilters('search', v)}
+        currentCategory={categoryFilter}
+        onCategoryChange={(v) => updateFilters('category', v)}
+        currentEvent={eventFilter}
+        onEventChange={(v) => updateFilters('event_category', v)}
+        currentYear={yearFilter}
+        onYearChange={(v) => updateFilters('event_year', v)}
+      />
 
       <ArticleDetail article={selectedArticle} isOpen={!!selectedArticle} onClose={() => setSelected(null)} />
     </div>

@@ -15,9 +15,11 @@ const Navbar = ({ onSearchClick }) => {
   }, []);
   const navLinks = [
     { name: 'Articles', path: '/news' },
+    { name: 'Issues', path: '/issues' },
     { name: 'The Team', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
+
   return (
     <>
       <nav
@@ -27,7 +29,7 @@ const Navbar = ({ onSearchClick }) => {
         <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
           <Link to="/" className="flex flex-col items-start group">
             <span className="font-serif text-2xl font-bold tracking-tighter text-white group-hover:scale-105 transition-transform duration-500">
-              AEP CHRONICLES
+              EPC CHRONICLES
             </span>
             <span className="text-[7px] tracking-[0.5em] uppercase text-white/30 font-bold -mt-1 group-hover:text-white/60 transition-colors">
               Official Journal · Est. 2026

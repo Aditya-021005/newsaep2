@@ -7,7 +7,7 @@ const LOG_ENTRIES = [
   'Verifying records...',
   'Finalizing dispatch...',
   'Optimizing streams...',
-  'AEP_CORE: Ready',
+  'EPC_CORE: Ready',
 ];
 const HEX_Diagnostic = () => {
   const [hex, setHex] = useState('0x0000');
@@ -70,7 +70,7 @@ const LoadingPage = () => {
       <div className="w-full max-w-md px-10 flex flex-col gap-10 relative z-10">
         <div className="flex flex-col items-center gap-6">
           <div className="flex overflow-hidden relative px-4 -mx-4 pb-4 -mb-4">
-            {"AEP".split("").map((char, i) => (
+            {"EPC".split("").map((char, i) => (
               <motion.span
                 key={i}
                 initial={{ y: "110%", opacity: 0 }}
@@ -134,7 +134,7 @@ const LoadingPage = () => {
       </div>
       <div className="absolute bottom-8 right-8 text-[8px] font-mono text-white/10 tracking-widest uppercase flex gap-8">
         <span>VER: 1.0.4-CLONE</span>
-        <span>AEP_CORE_SYNC: ACTIVE</span>
+        <span>EPC_CORE_SYNC: ACTIVE</span>
       </div>
     </div>
   );

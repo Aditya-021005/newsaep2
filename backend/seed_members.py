@@ -10,51 +10,51 @@ member_groups = [
   },
   {
     "year": "2023",
-    "members": ["Gawade (AEP Editor)", "Ishita (BEP Editor)", "Kalyani (CF Editor)", "Kedar (Chief Designer)", "Keerthi (OEP Editor)", "Kuhoo", "Kunal", "Laavanya", "Laxman", "Moshajjar", "Shreya (TFP Editor)", "Snata", "Vamsi"]
+    "members": ["Gawade (EPC Editor)", "Ishita (BEP Editor)", "Kalyani (CF Editor)", "Kedar (Chief Designer)", "Keerthi (OEP Editor)", "Kuhoo", "Kunal", "Laavanya", "Laxman", "Moshajjar", "Shreya (TFP Editor)", "Snata", "Vamsi"]
   },
   {
     "year": "2022",
-    "members": ["Adhvaith", "Aniruddha (Chief Designer)", "Dash", "Esha (BEP Editor)", "Garvit", "Harsh (OEP Editor)", "Ishaan", "Nishit", "Patiala (CF Editor)", "Shivansh (TFP Editor)", "Shreyas", "Stuti (AEP Editor)", "Tarun", "Vivegan"]
+    "members": ["Adhvaith", "Aniruddha (Chief Designer)", "Dash", "Esha (BEP Editor)", "Garvit", "Harsh (OEP Editor)", "Ishaan", "Nishit", "Patiala (CF Editor)", "Shivansh (TFP Editor)", "Shreyas", "Stuti (EPC Editor)", "Tarun", "Vivegan"]
   },
   {
     "year": "2021",
-    "members": ["Aditi C.", "Aditi M.", "Aditya (AEP Editor)", "Akshatha (OEP Editor)", "Anantshree", "Gowrav", "Harshita (BEP Editor)", "Iyer (TFP Editor)", "Kavya", "Krishnam", "Navin", "Samarth", "Sury (Chief Designer)", "Vidit", "Yash"]
+    "members": ["Aditi C.", "Aditi M.", "Aditya (EPC Editor)", "Akshatha (OEP Editor)", "Anantshree", "Gowrav", "Harshita (BEP Editor)", "Iyer (TFP Editor)", "Kavya", "Krishnam", "Navin", "Samarth", "Sury (Chief Designer)", "Vidit", "Yash"]
   },
   {
     "year": "2020",
-    "members": ["Aarjav (BEP Editor)", "Adaa (OEP Editor)", "Anurag", "Anushka (TFP Editor)", "Avi", "Keshav", "Mizaan", "Nandinee", "Riya (AEP Editor)", "Sahaj (Media Head)", "Shaz (CF Editor)", "Zehaan"]
+    "members": ["Aarjav (BEP Editor)", "Adaa (OEP Editor)", "Anurag", "Anushka (TFP Editor)", "Avi", "Keshav", "Mizaan", "Nandinee", "Riya (EPC Editor)", "Sahaj (Media Head)", "Shaz (CF Editor)", "Zehaan"]
   },
   {
     "year": "2019",
-    "members": ["Abhigya", "Advait", "Ani", "Anuneet", "Ashutosh (Chief Designer)", "Ayushmaan (Fest Press Editor)", "Dash", "Digvijay (CF Editor)", "Kumaraditya (Media Head)", "Parimi (TFP Editor)", "Saksham", "Siddharth", "Tejas (AEP Editor)", "Ved"]
+    "members": ["Abhigya", "Advait", "Ani", "Anuneet", "Ashutosh (Chief Designer)", "Ayushmaan (Fest Press Editor)", "Dash", "Digvijay (CF Editor)", "Kumaraditya (Media Head)", "Parimi (TFP Editor)", "Saksham", "Siddharth", "Tejas (EPC Editor)", "Ved"]
   },
   {
     "year": "2018",
-    "members": ["Adit", "Chiraag (AEP Editor)", "Effy", "Gandhar (BEP Editor)", "George", "Hamza (Chief Designer)", "Pranav", "Sabhya (OEP Editor)", "Sarthak", "Shreyasi (TFP Editor)", "Utkarsh (CF Editor)"]
+    "members": ["Adit", "Chiraag (EPC Editor)", "Effy", "Gandhar (BEP Editor)", "George", "Hamza (Chief Designer)", "Pranav", "Sabhya (OEP Editor)", "Sarthak", "Shreyasi (TFP Editor)", "Utkarsh (CF Editor)"]
   },
   {
     "year": "2017",
-    "members": ["Abhinav (TFP Editor)", "Anirudh (OEP Editor)", "Archith", "Aswathy", "Debarpan (Chief Designer)", "Jai (BEP Editor)", "Jayanth", "Roshan", "Saksham (CF Editor)", "Vasudevan (AEP Editor)", "Vinay", "Yashaswi"]
+    "members": ["Abhinav (TFP Editor)", "Anirudh (OEP Editor)", "Archith", "Aswathy", "Debarpan (Chief Designer)", "Jai (BEP Editor)", "Jayanth", "Roshan", "Saksham (CF Editor)", "Vasudevan (EPC Editor)", "Vinay", "Yashaswi"]
   },
   {
     "year": "2016",
-    "members": ["Anuvind", "Ardra", "Aswin (BEP Editor)", "Divya (AEP Editor)", "Mamallan (Chief Designer)", "Mustansir (TFP Editor)", "Naveen (CF Editor)", "Swarup", "Vidhi (OEP Editor)"]
+    "members": ["Anuvind", "Ardra", "Aswin (BEP Editor)", "Divya (EPC Editor)", "Mamallan (Chief Designer)", "Mustansir (TFP Editor)", "Naveen (CF Editor)", "Swarup", "Vidhi (OEP Editor)"]
   },
   {
     "year": "2015",
-    "members": ["Anurup (BEP Editor)", "Deepak", "Devanshu", "Gokul", "Nabeel (CF Editor)", "Samksha (AEP Editor)", "Sneha (OEP Editor)", "Vaswani", "Vighnesh (TFP Editor)", "Vivek"]
+    "members": ["Anurup (BEP Editor)", "Deepak", "Devanshu", "Gokul", "Nabeel (CF Editor)", "Samksha (EPC Editor)", "Sneha (OEP Editor)", "Vaswani", "Vighnesh (TFP Editor)", "Vivek"]
   },
   {
     "year": "2014",
-    "members": ["Gautam (AEP Editor)", "Karan (CF Editor)", "Lalit (TFP Editor)", "Niharika (OEP Editor)", "Pranav (BEP Editor)", "Pranjali", "Prayaag", "Rishabh", "Saylee (OEP Editor)", "Shreya", "Sibesh", "Tushar"]
+    "members": ["Gautam (EPC Editor)", "Karan (CF Editor)", "Lalit (TFP Editor)", "Niharika (OEP Editor)", "Pranav (BEP Editor)", "Pranjali", "Prayaag", "Rishabh", "Saylee (OEP Editor)", "Shreya", "Sibesh", "Tushar"]
   },
   {
     "year": "2013",
-    "members": ["Akhilesh", "Anirudh", "Danish (CF Editor)", "Deeksha", "Devina (OEP Editor)", "Gayatri (AEP Editor)", "Lasya", "Manesh", "Sanket (TFP Editor)", "Shubham", "Vishal (BEP Editor)"]
+    "members": ["Akhilesh", "Anirudh", "Danish (CF Editor)", "Deeksha", "Devina (OEP Editor)", "Gayatri (EPC Editor)", "Lasya", "Manesh", "Sanket (TFP Editor)", "Shubham", "Vishal (BEP Editor)"]
   },
   {
     "year": "2012",
-    "members": ["Ananth", "Anish (AEP Editor)", "Archit", "Madhusudan", "Pratik", "Rahul (BEP Editor)", "Rusheen (OEP Editor)", "Soumya (CF Editor)", "Srishti", "Tanay", "Tanmayee", "Vijay (TFP Editor)"]
+    "members": ["Ananth", "Anish (EPC Editor)", "Archit", "Madhusudan", "Pratik", "Rahul (BEP Editor)", "Rusheen (OEP Editor)", "Soumya (CF Editor)", "Srishti", "Tanay", "Tanmayee", "Vijay (TFP Editor)"]
   }
 ]
 Member.objects.all().delete()
