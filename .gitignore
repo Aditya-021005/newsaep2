@@ -48,3 +48,8 @@ Icon
 .vscode/
 *.swp
 *.swo
+
+# Local Development Data (Must be ignored to prevent server data loss)
+backend/db.sqlite3
+backend/media/
+
