@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -159,28 +160,29 @@ const IssuesPage = ({ onOpenSidebar }) => {
         )}
       </div>
 
-      <AnimatePresence>
-        {selectedIssue && (
+      {selectedIssue && createPortal(
+        <AnimatePresence>
           <motion.div 
+            key="issue-modal"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-3xl overflow-y-auto"
+            className="fixed inset-0 z-[2000] bg-black/98 backdrop-blur-3xl overflow-y-auto"
           >
             <div className="min-h-screen flex flex-col">
-                <div className="p-8 flex items-center justify-between border-b border-white/10">
+                <div className="p-8 flex items-center justify-between border-b border-white/10 shrink-0">
                     <div className="flex flex-col gap-1">
                         <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-bold">Secure Dispatch View</span>
                         <h2 className="text-white font-serif text-2xl font-bold tracking-tighter italic">{selectedIssue.title}</h2>
                     </div>
                     <button 
                         onClick={() => setSelectedIssue(null)}
-                        className="w-16 h-16 rounded-full bg-white text-black text-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all shadow-2xl"
+                        className="w-16 h-16 rounded-full bg-white text-black text-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all shadow-2xl z-[2001]"
                     >
                         ✕
                     </button>
                 </div>
-                <div className="flex-1 flex items-center justify-center overflow-x-hidden">
+                <div className="flex-1 flex items-center justify-center overflow-x-hidden p-4">
                     <PDFFlipbook 
                         pdfUrl={selectedIssue.pdf_url} 
                         title={selectedIssue.title}
@@ -188,15 +190,16 @@ const IssuesPage = ({ onOpenSidebar }) => {
                         year={selectedIssue.event_year}
                     />
                 </div>
-                <div className="p-8 border-t border-white/10 flex items-center justify-center gap-12 text-[10px] tracking-[0.3em] uppercase text-white/20">
+                <div className="p-8 border-t border-white/10 flex items-center justify-center gap-12 text-[10px] tracking-[0.3em] uppercase text-white/20 shrink-0">
                     <span>Precision Journalism</span>
                     <div className="w-1 h-1 bg-white/20 rounded-full" />
                     <span>Archive Entry #{selectedIssue.id}</span>
                 </div>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };
