@@ -26,4 +26,4 @@ docker compose -f docker-compose.prod.yml up -d --build
 echo "🧹 Cleaning up old Docker images..."
 docker image prune -f
 
-echo "✅ Deployment complete! Your app is running at http://13.62.76.2"
+echo "✅ Deployment complete! Your app is running at http://13.60.197.21"
