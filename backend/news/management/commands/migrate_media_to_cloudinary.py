@@ -46,13 +46,19 @@ class Command(BaseCommand):
 
                     local_path = media_root / field.name
                     if not local_path.exists():
+                        baseline_name = Path(field.name).name
+                        upload_to = getattr(field.field, 'upload_to', '') or ''
+                        local_path = media_root / upload_to / baseline_name
+
+                    if not local_path.exists():
                         self.stdout.write(self.style.WARNING(
                             f'Skipping {model.__name__}[{item.pk}] {field_name}: local file not found at {local_path}'
                         ))
                         continue
 
                     with open(local_path, 'rb') as local_file:
-                        field.save(field.name, File(local_file), save=False)
+                        upload_name = Path(field.name).name
+                        field.save(upload_name, File(local_file), save=False)
                     item.save(update_fields=[field_name])
                     self.stdout.write(self.style.SUCCESS(
                         f'Uploaded {model.__name__}[{item.pk}] {field_name} to Cloudinary: {field.name}'
