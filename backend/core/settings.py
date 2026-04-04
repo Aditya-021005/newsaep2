@@ -120,7 +120,7 @@ if CLOUDINARY_URL or (CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINAR
             'SECURE': True,
         }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage' if USE_CLOUDINARY_STORAGE else 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'core.storage.AutoMediaCloudinaryStorage' if USE_CLOUDINARY_STORAGE else 'django.core.files.storage.FileSystemStorage'
 
 # Upload limits
 DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB

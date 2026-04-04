@@ -15,7 +15,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
       args:
-        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-https://epcchronicles.com/api}
     ports:
       - "80:80"
     depends_on:
