@@ -18,9 +18,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         delete_local = options['delete_local']
-        default_storage = settings.DEFAULT_FILE_STORAGE
-
-        if not default_storage.startswith('cloudinary_storage'):
+        if not getattr(settings, 'USE_CLOUDINARY_STORAGE', False):
             self.stdout.write(self.style.ERROR(
                 'Cloudinary storage is not enabled. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET or CLOUDINARY_URL.'
             ))
