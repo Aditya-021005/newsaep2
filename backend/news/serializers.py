@@ -37,7 +37,15 @@ class IssueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Issue
-        fields = '__all__'
+        fields = [
+            'id',
+            'title',
+            'event_category',
+            'event_year',
+            'published_date',
+            'pdf_url',
+            'thumbnail_url',
+        ]
 
     def get_pdf_url(self, obj):
         request = self.context.get('request')
