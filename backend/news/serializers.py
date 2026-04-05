@@ -8,10 +8,7 @@ class ArticleImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image_url', 'caption']
     
     def get_image_url(self, obj):
-        request = self.context.get('request')
         if obj.image_file:
-            if request:
-                return request.build_absolute_uri(obj.image_file.url)
             return obj.image_file.url
         return None
 
@@ -25,9 +22,6 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.image_file:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.image_file.url)
             return obj.image_file.url
         return obj.image_url
 
@@ -53,14 +47,10 @@ class IssueSerializer(serializers.ModelSerializer):
         
         # Use a relative path to avoid "Mixed Content (canceled)" errors
         # the browser will automatically use the correct domain/protocol of the current page.
-        raw_url = obj.pdf_file.url
-        return f"/api/proxy-pdf/?url={raw_url}"
+        return f"/api/proxy-pdf/?url={obj.pdf_file.url}"
 
     def get_thumbnail_url(self, obj):
-        request = self.context.get('request')
         if obj.thumbnail:
-            if request:
-                return request.build_absolute_uri(obj.thumbnail.url)
             return obj.thumbnail.url
         return None
 
