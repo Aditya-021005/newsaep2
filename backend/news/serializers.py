@@ -49,9 +49,17 @@ class IssueSerializer(serializers.ModelSerializer):
 
     def get_pdf_url(self, obj):
         request = self.context.get('request')
-        if obj.pdf_file and request:
-            return request.build_absolute_uri(obj.pdf_file.url)
-        return obj.pdf_file.url if obj.pdf_file else None
+        if not obj.pdf_file:
+            return None
+        
+        raw_url = obj.pdf_file.url
+        if request:
+            # Build the full internal proxy URL
+            full_raw_url = request.build_absolute_uri(raw_url)
+            proxy_base = request.build_absolute_uri('/api/proxy-pdf/')
+            return f"{proxy_base}?url={full_raw_url}"
+        
+        return raw_url
 
     def get_thumbnail_url(self, obj):
         request = self.context.get('request')
