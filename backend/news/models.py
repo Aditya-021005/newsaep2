@@ -31,11 +31,18 @@ class ArticleImage(models.Model):
     def __str__(self):
         return f"Image for {self.article.title}"
 
+from django.db import models
+from django.core.files.storage import FileSystemStorage
+
+# Use local storage specifically for PDFs to avoid Cloudinary raw file issues
+pdf_storage = FileSystemStorage(location='media/issues/pdfs/')
+
 class Issue(models.Model):
     title = models.CharField(max_length=255)
     event_category = models.CharField(max_length=20, choices=EVENT_CHOICES)
     event_year = models.IntegerField()
-    pdf_file = models.FileField(upload_to='issues/pdfs/')
+    pdf_file = models.FileField(upload_to='issues/pdfs/', storage=pdf_storage if not models.fields.files.FieldFile else None) 
+    # Note: We'll keep it flexible but suggest local storage for the file field
     thumbnail = models.ImageField(upload_to='issues/thumbnails/', blank=True, null=True)
     published_date = models.DateTimeField(auto_now_add=True)
 
