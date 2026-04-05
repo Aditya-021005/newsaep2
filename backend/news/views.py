@@ -33,19 +33,24 @@ import requests
 @permission_classes([AllowAny])
 def proxy_pdf(request):
     """
-    Proxies a PDF from a remote URL to bypass CORS.
-    Usage: /api/proxy-pdf/?url=https://example.com/file.pdf
+    Proxies a PDF from a remote OR local URL to bypass CORS.
+    Usage: /api/proxy-pdf/?url=/media/issues/pdfs/file.pdf
     """
     target_url = request.query_params.get('url')
     if not target_url:
         return JsonResponse({'error': 'No URL provided'}, status=400)
     
-    # Security: You might want to restrict this to specific domains
-    # if "cloudinary.com" not in target_url and "res.cloudinary.com" not in target_url:
-    #     return JsonResponse({'error': 'Invalid domain'}, status=403)
+    # If the URL is relative, convert it to an absolute one using host's URI
+    if target_url.startswith('/'):
+        target_url = request.build_absolute_uri(target_url)
+    elif not target_url.startswith('http'):
+        # Just in case some paths are weirdly formatted
+        target_url = request.build_absolute_uri('/' + target_url)
 
     try:
         # Fetch the PDF
+        # We also need to handle cases where the internal file might require a host mapping
+        # but build_absolute_uri should have solved it.
         response = requests.get(target_url, stream=True, timeout=15)
         response.raise_for_status()
         
@@ -58,6 +63,8 @@ def proxy_pdf(request):
         # Simple headers to ensure it displays correctly and allows CORS
         proxy_response['Access-Control-Allow-Origin'] = '*'
         proxy_response['Content-Disposition'] = response.headers.get('Content-Disposition', 'inline')
+        # Ensure it doesn't block iframed viewing
+        proxy_response['X-Frame-Options'] = 'ALLOWALL'
         
         return proxy_response
         

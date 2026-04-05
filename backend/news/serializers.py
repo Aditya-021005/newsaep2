@@ -48,18 +48,13 @@ class IssueSerializer(serializers.ModelSerializer):
         ]
 
     def get_pdf_url(self, obj):
-        request = self.context.get('request')
         if not obj.pdf_file:
             return None
         
+        # Use a relative path to avoid "Mixed Content (canceled)" errors
+        # the browser will automatically use the correct domain/protocol of the current page.
         raw_url = obj.pdf_file.url
-        if request:
-            # Build the full internal proxy URL
-            full_raw_url = request.build_absolute_uri(raw_url)
-            proxy_base = request.build_absolute_uri('/api/proxy-pdf/')
-            return f"{proxy_base}?url={full_raw_url}"
-        
-        return raw_url
+        return f"/api/proxy-pdf/?url={raw_url}"
 
     def get_thumbnail_url(self, obj):
         request = self.context.get('request')
