@@ -78,11 +78,16 @@ def restore():
                 name = parts[0].strip()
                 role = parts[1].replace(")", "").strip()
             
-            # Create the member
+            # Create the member with safe defaults
             Member.objects.get_or_create(
                 name=name,
                 year=year,
-                defaults={'role': role}
+                defaults={
+                    'role': role,
+                    'bio': '',
+                    'image_url': '',
+                    'image_file': None
+                }
             )
             count += 1
     
