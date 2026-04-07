@@ -26,17 +26,10 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def get_image_url(self, obj):
-        if obj.image_file:
-            url = obj.image_file.url
-        else:
-            url = obj.image_url
-            
+        url = obj.image_file.url if obj.image_file else obj.image_url
         if url and '://' in url:
-            # Check if it's our own domain or an external one (like Cloudinary)
-            # If it's ours, make it relative. If it's Cloudinary, keep it as is.
-            if 'cloudinary' not in url:
-                from urllib.parse import urlparse
-                url = urlparse(url).path
+            from urllib.parse import urlparse
+            url = urlparse(url).path
         return url
 
 class IssueSerializer(serializers.ModelSerializer):
@@ -58,25 +51,14 @@ class IssueSerializer(serializers.ModelSerializer):
 
     def get_pdf_url(self, obj):
         # Priority 1: External URL (like Google Drive)
-        url = obj.pdf_external_url
-        
         # Priority 2: Local Upload
-        if not url and obj.pdf_file:
-            url = obj.pdf_file.url
-            
+        url = obj.pdf_external_url or (obj.pdf_file.url if obj.pdf_file else None)
+        
         if not url:
             return None
         
-        # Ensure the URL is just the path part for local files to avoid proxy loops
-        if '://' in url:
-            # Check if it's our own domain or an external one (like Google Drive/Cloudinary)
-            # We proxy EVERYTHING via our local proxy to avoid CORS/Mixed Content
-            # but we need to pass the full URL to the proxy if it's remote.
-            pass # Keep full URL for remote
-        else:
-            # If it's a relative path, keep it relative for the proxy
-            pass
-
+        # If it's a relative path, keep it relative. If it's a full URL, keep it full.
+        # The proxy_pdf view now handles both correctly (local vs remote).
         return f"/api/proxy-pdf/?url={url}"
 
     def get_thumbnail_url(self, obj):

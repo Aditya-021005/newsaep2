@@ -28,9 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
-    'cloudinary',
     'rest_framework',
     'django_filters',
     'corsheaders',
@@ -126,26 +124,7 @@ CACHES = {
     }
 }
 
-# Media Files Storage (Cloudinary)
-CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
-CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
-CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
-CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
-
-CLOUDINARY_STORAGE = {}
-USE_CLOUDINARY_STORAGE = False
-
-if CLOUDINARY_URL or (CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET):
-    USE_CLOUDINARY_STORAGE = True
-    if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET:
-        CLOUDINARY_STORAGE = {
-            'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
-            'API_KEY': CLOUDINARY_API_KEY,
-            'API_SECRET': CLOUDINARY_API_SECRET,
-            'SECURE': True,
-        }
-
-DEFAULT_FILE_STORAGE = 'core.storage.AutoMediaCloudinaryStorage' if USE_CLOUDINARY_STORAGE else 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Upload limits
 DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
