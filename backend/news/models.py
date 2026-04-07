@@ -88,7 +88,24 @@ class Issue(models.Model):
         # 1. Get PDF data from URL or local file
         if self.pdf_external_url:
             try:
-                response = requests.get(self.pdf_external_url, timeout=10)
+                url = self.pdf_external_url
+                session = requests.Session()
+                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+                
+                # Handle Google Drive confirm token
+                if 'drive.google.com' in url:
+                    response = session.get(url, headers=headers, stream=True, timeout=15)
+                    confirm_token = None
+                    for key, value in session.cookies.items():
+                        if key.startswith('download_warning'):
+                            confirm_token = value
+                            break
+                    if confirm_token:
+                        url = f"{url}&confirm={confirm_token}"
+                        response = session.get(url, headers=headers, stream=True, timeout=15)
+                else:
+                    response = session.get(url, headers=headers, timeout=10)
+                
                 response.raise_for_status()
                 pdf_data = response.content
             except Exception:

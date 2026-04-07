@@ -31,7 +31,7 @@ const StandardPDFViewer = ({ pdfUrl, title }) => {
         </div>
       </div>
       
-      <div className="flex-1 min-h-[70vh] bg-neutral-950 relative">
+      <div className="flex-1 h-[80vh] bg-neutral-950 relative">
         {/* Loading Indicator behind Iframe */}
         <div className="absolute inset-0 flex items-center justify-center -z-10">
              <div className="flex flex-col items-center gap-4 text-white/10">
@@ -42,7 +42,8 @@ const StandardPDFViewer = ({ pdfUrl, title }) => {
         
         <iframe 
           src={`${pdfUrl}#toolbar=1&navpanes=0&scrollbar=1`}
-          className="w-full h-full border-none"
+          className="w-full h-full border-none block"
+          style={{ minHeight: '100%' }}
           title="PDF Content"
         />
       </div>

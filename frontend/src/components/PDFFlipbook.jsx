@@ -92,13 +92,13 @@ const PDFFlipbook = ({ pdfUrl, title, event, year, onFallbackTriggered }) => {
               </div>
               <h3 className="text-white font-serif text-2xl font-bold italic mb-4">Transmission Fragmented</h3>
               <p className="text-white/40 text-[10px] tracking-widest uppercase mb-8 max-w-md">
-                  The host server (Cloudinary) may be restricting direct archive access or CORS parameters are mismatching.
+                  The host server may be restricting direct archive access.
               </p>
               <button 
                 onClick={onFallbackTriggered}
                 className="px-12 py-4 bg-white text-black font-bold text-[10px] tracking-[0.4em] uppercase hover:bg-neutral-200 transition-all shadow-xl"
               >
-                  Initiate Standard Decrypt
+                  Open Standard Viewer
               </button>
           </div>
       );

@@ -9,8 +9,34 @@ import requests
 from rest_framework import viewsets, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from .models import Article, ContactMessage, Member, Issue
 from .serializers import ArticleSerializer, ContactMessageSerializer, MemberSerializer, IssueSerializer
+
+def get_google_drive_stream(url):
+    """
+    Handles Google Drive 'too large to scan' warnings by automatically
+    extracting the confirmation token and retrying the download.
+    """
+    session = requests.Session()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    # 1. First attempt to get the download (Google might show a warning page)
+    response = session.get(url, headers=headers, stream=True, timeout=15)
+    
+    # 2. Check if we have a confirmation token in cookies or page content
+    confirm_token = None
+    for key, value in session.cookies.items():
+        if key.startswith('download_warning'):
+            confirm_token = value
+            break
+            
+    if confirm_token:
+        # Re-request with the confirmation token
+        url = f"{url}&confirm={confirm_token}"
+        return session.get(url, headers=headers, stream=True, timeout=20)
+        
+    return response
 
 class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
@@ -98,16 +124,18 @@ def proxy_pdf(request):
 
     try:
         # Use a browser-like User-Agent to prevent 401/403 errors from Google Drive
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-        
-        # Use longer timeout for slow Google Drive responses
-        response = requests.get(target_url, stream=True, timeout=15, headers=headers, allow_redirects=True)
+        if 'drive.google.com' in target_url:
+            response = get_google_drive_stream(target_url)
+        else:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(target_url, stream=True, timeout=15, headers=headers, allow_redirects=True)
+            
         response.raise_for_status()
         
         proxy_response = StreamingHttpResponse(
-            response.iter_content(chunk_size=32768),  # Larger chunks for faster transfer
+            response.iter_content(chunk_size=65536),  # Larger chunks for performance
             content_type=response.headers.get('Content-Type', 'application/pdf')
         )
         
