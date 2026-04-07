@@ -4,7 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     volumes:
-      - db_data:/app
+      - ./backend/database.sqlite3:/app/db.sqlite3
       - ./backend/media:/app/media
     env_file:
       - .env.prod
