@@ -137,28 +137,10 @@ const AboutPage = () => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/members/`)
-      .then(res => {
-        const dataArr = Array.isArray(res.data) ? res.data : (res.data.results || []);
-        if (dataArr.length > 0) {
-          setTotalMembers(res.data?.count || dataArr.length || 0);
-          const grouped = dataArr.reduce((acc, member) => {
-            const display = member.role ? `${member.name} (${member.role})` : member.name;
-            const group = acc.find(g => g.year === member.year);
-            if (group) group.members.push(display);
-            else acc.push({ year: member.year, members: [display] });
-            return acc;
-          }, []);
-          
-          // Sort both the year groups and the members within them
-          grouped.forEach(g => g.members.sort());
-          grouped.sort((a, b) => b.year - a.year);
-          setMemberData(grouped);
-        }
-      })
-      .catch(err => {
-        console.warn('Backend unavailable, using hardcoded team history.');
-      });
+    // Rely exclusively on the HARDCODED_TEAM manifest for the showcase 
+    // to ensure Title Case and Alphabetical sorting are preserved.
+    setMemberData(HARDCODED_TEAM);
+    setTotalMembers(156);
   }, []);
 
   return (
