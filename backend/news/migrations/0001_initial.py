@@ -14,13 +14,15 @@ class Migration(migrations.Migration):
             name='Article',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
+                ('title', models.CharField(db_index=True, max_length=255)),
                 ('content', models.TextField()),
+                ('published_date', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('image_url', models.URLField(blank=True, max_length=500, null=True)),
                 ('image_file', models.ImageField(blank=True, null=True, upload_to='articles/')),
-                ('published_date', models.DateTimeField(auto_now_add=True)),
+                ('summary', models.CharField(blank=True, max_length=500)),
+                ('category', models.CharField(db_index=True, default='Trending', max_length=100)),
                 ('event_category', models.CharField(choices=[('Oasis', 'Oasis'), ('Apogee', 'Apogee'), ('BOSM', 'BOSM'), ('Other', 'Other')], default='Apogee', max_length=20)),
-                ('event_year', models.IntegerField(default=2024)),
+                ('event_year', models.IntegerField(db_index=True, default=2024)),
             ],
             options={
                 'ordering': ['-published_date'],
@@ -40,9 +42,9 @@ class Migration(migrations.Migration):
             name='Issue',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('event_category', models.CharField(choices=[('Oasis', 'Oasis'), ('Apogee', 'Apogee'), ('BOSM', 'BOSM'), ('Other', 'Other')], max_length=20)),
-                ('event_year', models.IntegerField()),
+                ('title', models.CharField(db_index=True, max_length=255)),
+                ('event_category', models.CharField(choices=[('Oasis', 'Oasis'), ('Apogee', 'Apogee'), ('BOSM', 'BOSM'), ('Other', 'Other')], db_index=True, max_length=20)),
+                ('event_year', models.IntegerField(db_index=True)),
                 ('pdf_file', models.FileField(blank=True, null=True, upload_to='issues/pdfs/')),
                 ('pdf_external_url', models.URLField(blank=True, help_text='Direct link to a PDF (e.g. Google Drive direct link)', max_length=500, null=True)),
                 ('thumbnail', models.ImageField(blank=True, null=True, upload_to='issues/thumbnails/')),
@@ -57,8 +59,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
+                ('year', models.IntegerField(default=2024)),
                 ('role', models.CharField(max_length=100)),
                 ('image_url', models.URLField(blank=True, max_length=500, null=True)),
+                ('image_file', models.ImageField(blank=True, null=True, upload_to='members/')),
                 ('bio', models.TextField(blank=True)),
             ],
         ),
@@ -70,6 +74,14 @@ class Migration(migrations.Migration):
                 ('caption', models.CharField(blank=True, max_length=255)),
                 ('article', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='news.article')),
             ],
+        ),
+        migrations.AddIndex(
+            model_name='article',
+            index=models.Index(fields=['-published_date'], name='news_articl_publish_385002_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='article',
+            index=models.Index(fields=['event_category', 'event_year'], name='news_articl_event_c_93d8b7_idx'),
         ),
         migrations.AddIndex(
             model_name='issue',
