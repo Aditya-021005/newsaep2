@@ -10,19 +10,25 @@ from .models import Article, ContactMessage, Member, Issue
 from .serializers import ArticleSerializer, ContactMessageSerializer, MemberSerializer, IssueSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all().order_by('-published_date')
     serializer_class = ArticleSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content', 'summary', 'category']
     filterset_fields = ['category', 'event_category', 'event_year']
     ordering_fields = ['published_date', 'title']
+    
+    def get_queryset(self):
+        # Optimize queries with select_related and prefetch_related
+        return Article.objects.prefetch_related('images').order_by('-published_date')
 
 class IssueViewSet(viewsets.ModelViewSet):
-    queryset = Issue.objects.all().order_by('-event_year', '-published_date')
     serializer_class = IssueSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['event_category', 'event_year']
     search_fields = ['title']
+    
+    def get_queryset(self):
+        # Optimize queries
+        return Issue.objects.order_by('-event_year', '-published_date')
 
 class ContactMessageViewSet(viewsets.ModelViewSet):
     queryset = ContactMessage.objects.all().order_by('-created_at')
@@ -83,8 +89,9 @@ def proxy_pdf(request):
         return JsonResponse({'error': f'Failed to fetch PDF: {str(e)}'}, status=502)
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.all().order_by('year', 'name')
     serializer_class = MemberSerializer
-    pagination_class = None
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'year', 'role']
+    
+    def get_queryset(self):
+        return Member.objects.order_by('year', 'name')
