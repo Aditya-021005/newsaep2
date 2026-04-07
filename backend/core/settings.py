@@ -67,6 +67,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'CONN_MAX_AGE': 600,  # Keep connections alive for 10 minutes
     }
 }
 AUTH_PASSWORD_VALIDATORS = [
@@ -111,6 +112,15 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+# Caching configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'newsaep-cache',
+        'OPTIONS': {
+            'MAX_ENTRIES': 10000,
+        }
+    }
 }
 
 # Media Files Storage (Cloudinary)

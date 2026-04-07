@@ -8,17 +8,24 @@ EVENT_CHOICES = [
 ]
 
 class Article(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, db_index=True)
     content = models.TextField()
-    published_date = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField(auto_now_add=True, db_index=True)
     image_url = models.URLField(max_length=500, blank=True, null=True)
     image_file = models.ImageField(upload_to='articles/', blank=True, null=True)
     summary = models.CharField(max_length=500, blank=True)
-    category = models.CharField(max_length=100, default='Trending')
+    category = models.CharField(max_length=100, default='Trending', db_index=True)
     
     # New filterable fields
-    event_category = models.CharField(max_length=20, choices=EVENT_CHOICES, default='Apogee')
-    event_year = models.IntegerField(default=2024)
+    event_category = models.CharField(max_length=20, choices=EVENT_CHOICES, default='Apogee', db_index=True)
+    event_year = models.IntegerField(default=2024, db_index=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-published_date']),
+            models.Index(fields=['event_category', 'event_year']),
+        ]
+        ordering = ['-published_date']
 
     def __str__(self):
         return self.title
@@ -38,13 +45,20 @@ from django.core.files.storage import FileSystemStorage
 pdf_storage = FileSystemStorage(location='media/issues/pdfs/')
 
 class Issue(models.Model):
-    title = models.CharField(max_length=255)
-    event_category = models.CharField(max_length=20, choices=EVENT_CHOICES)
-    event_year = models.IntegerField()
+    title = models.CharField(max_length=255, db_index=True)
+    event_category = models.CharField(max_length=20, choices=EVENT_CHOICES, db_index=True)
+    event_year = models.IntegerField(db_index=True)
     pdf_file = models.FileField(upload_to='issues/pdfs/', storage=pdf_storage if not models.fields.files.FieldFile else None) 
     # Note: We'll keep it flexible but suggest local storage for the file field
     thumbnail = models.ImageField(upload_to='issues/thumbnails/', blank=True, null=True)
-    published_date = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-event_year', '-published_date']),
+            models.Index(fields=['event_category', 'event_year']),
+        ]
+        ordering = ['-event_year', '-published_date']
 
     def __str__(self):
         return f"{self.event_category} {self.event_year} - {self.title}"
