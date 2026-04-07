@@ -4,21 +4,20 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavigationalChart from '../components/NavigationalChart';
 
-// --- HARDCODED TEAM DATA (Showcase-Safe) ---
 const HARDCODED_TEAM = [
-  { year: 2024, members: ["ADITI BARAL", "ABHIRUP TAPADAR", "ANIKA TYAGI", "DARSH VIKESHKUMAR PATEL", "HARIVANSH MEHTA", "SAUMYA GOYAL", "TANVI GANGAKHEDKAR", "SHIREEN BANERJEE KAR", "LATIKA ANAND", "JAYANT GUPTA", "PARASMAY ACHARYA", "PRANEET RAJ LINGAMALLU", "RAAFEY AZIZ", "SOHAM SAXENA", "TANMAY ARORA", "ADITYA "] },
-  { year: 2023, members: ["Gawade (EPC Editor)", "Ishita (BEP Editor)", "Kalyani (CF Editor)", "Kedar (Chief Designer)", "Keerthi (OEP Editor)", "Kuhoo", "Kunal", "Laavanya", "Laxman", "Moshajjar", "Shreya (TFP Editor)", "Snata", "Vamsi"] },
-  { year: 2022, members: ["Adhvaith", "Aniruddha (Chief Designer)", "Dash", "Esha (BEP Editor)", "Garvit", "Harsh (OEP Editor)", "Ishaan", "Nishit", "Patiala (CF Editor)", "Shivansh (TFP Editor)", "Shreyas", "Stuti (EPC Editor)", "Tarun", "Vivegan"] },
-  { year: 2021, members: ["Aditi C.", "Aditi M.", "Aditya (EPC Editor)", "Akshatha (OEP Editor)", "Anantshree", "Gowrav", "Harshita (BEP Editor)", "Iyer (TFP Editor)", "Kavya", "Krishnam", "Navin", "Samarth", "Sury (Chief Designer)", "Vidit", "Yash"] },
-  { year: 2020, members: ["Aarjav (BEP Editor)", "Adaa (OEP Editor)", "Anurag", "Anushka (TFP Editor)", "Avi", "Keshav", "Mizaan", "Nandinee", "Riya (EPC Editor)", "Sahaj (Media Head)", "Shaz (CF Editor)", "Zehaan"] },
-  { year: 2019, members: ["Abhigya", "Advait", "Ani", "Anuneet", "Ashutosh (Chief Designer)", "Ayushmaan (Fest Press Editor)", "Dash", "Digvijay (CF Editor)", "Kumaraditya (Media Head)", "Parimi (TFP Editor)", "Saksham", "Siddharth", "Tejas (EPC Editor)", "Ved"] },
-  { year: 2018, members: ["Adit", "Chiraag (EPC Editor)", "Effy", "Gandhar (BEP Editor)", "George", "Hamza (Chief Designer)", "Pranav", "Sabhya (OEP Editor)", "Sarthak", "Shreyasi (TFP Editor)", "Utkarsh (CF Editor)"] },
-  { year: 2017, members: ["Abhinav (TFP Editor)", "Anirudh (OEP Editor)", "Archith", "Aswathy", "Debarpan (Chief Designer)", "Jai (BEP Editor)", "Jayanth", "Roshan", "Saksham (CF Editor)", "Vasudevan (EPC Editor)", "Vinay", "Yashaswi"] },
-  { year: 2016, members: ["Anuvind", "Ardra", "Aswin (BEP Editor)", "Divya (EPC Editor)", "Mamallan (Chief Designer)", "Mustansir (TFP Editor)", "Naveen (CF Editor)", "Swarup", "Vidhi (OEP Editor)"] },
-  { year: 2015, members: ["Anurup (BEP Editor)", "Deepak", "Devanshu", "Gokul", "Nabeel (CF Editor)", "Samksha (EPC Editor)", "Sneha (OEP Editor)", "Vaswani", "Vighnesh (TFP Editor)", "Vivek"] },
-  { year: 2014, members: ["Gautam (EPC Editor)", "Karan (CF Editor)", "Lalit (TFP Editor)", "Niharika (OEP Editor)", "Pranav (BEP Editor)", "Pranjali", "Prayaag", "Rishabh", "Saylee (OEP Editor)", "Shreya", "Sibesh", "Tushar"] },
-  { year: 2013, members: ["Akhilesh", "Anirudh", "Danish (CF Editor)", "Deeksha", "Devina (OEP Editor)", "Gayatri (EPC Editor)", "Lasya", "Manesh", "Sanket (TFP Editor)", "Shubham", "Vishal (BEP Editor)"] },
-  { year: 2012, members: ["Ananth", "Anish (EPC Editor)", "Archit", "Madhusudan", "Pratik", "Rahul (BEP Editor)", "Rusheen (OEP Editor)", "Soumya (CF Editor)", "Srishti", "Tanay", "Tanmayee", "Vijay (TFP Editor)"] }
+  { year: 2024, members: ["Abhirup Tapadar", "Aditi Baral", "Aditya", "Anika Tyagi", "Darsh Vikeshkumar Patel", "Harivansh Mehta", "Jayant Gupta", "Latika Anand", "Parasmay Acharya", "Praneet Raj Lingamallu", "Raafey Aziz", "Saumya Goyal", "Shireen Banerjee Kar", "Soham Saxena", "Tanmay Arora", "Tanvi Gangakhedkar"].sort() },
+  { year: 2023, members: ["Gawade (AEP Editor)", "Ishita (BEP Editor)", "Kalyani (CF Editor)", "Kedar (Chief Designer)", "Keerthi (OEP Editor)", "Kuhoo", "Kunal", "Laavanya", "Laxman", "Moshajjar", "Shreya (TFP Editor)", "Snata", "Vamsi"].sort() },
+  { year: 2022, members: ["Adhvaith", "Aniruddha (Chief Designer)", "Dash", "Esha (BEP Editor)", "Garvit", "Harsh (OEP Editor)", "Ishaan", "Nishit", "Patiala (CF Editor)", "Shivansh (TFP Editor)", "Shreyas", "Stuti (AEP Editor)", "Tarun", "Vivegan"].sort() },
+  { year: 2021, members: ["Aditi C.", "Aditi M.", "Aditya (AEP Editor)", "Akshatha (OEP Editor)", "Anantshree", "Gowrav", "Harshita (BEP Editor)", "Iyer (TFP Editor)", "Kavya", "Krishnam", "Navin", "Samarth", "Sury (Chief Designer)", "Vidit", "Yash"].sort() },
+  { year: 2020, members: ["Aarjav (BEP Editor)", "Adaa (OEP Editor)", "Anurag", "Anushka (TFP Editor)", "Avi", "Keshav", "Mizaan", "Nandinee", "Riya (AEP Editor)", "Sahaj (Media Head)", "Shaz (CF Editor)", "Zehaan"].sort() },
+  { year: 2019, members: ["Abhigya", "Advait", "Ani", "Anuneet", "Ashutosh (Chief Designer)", "Ayushmaan (Fest Press Editor)", "Dash", "Digvijay (CF Editor)", "Kumaraditya (Media Head)", "Parimi (TFP Editor)", "Saksham", "Siddharth", "Tejas (AEP Editor)", "Ved"].sort() },
+  { year: 2018, members: ["Adit", "Chiraag (AEP Editor)", "Effy", "Gandhar (BEP Editor)", "George", "Hamza (Chief Designer)", "Pranav", "Sabhya (OEP Editor)", "Sarthak", "Shreyasi (TFP Editor)", "Utkarsh (CF Editor)"].sort() },
+  { year: 2017, members: ["Abhinav (TFP Editor)", "Anirudh (OEP Editor)", "Archith", "Aswathy", "Debarpan (Chief Designer)", "Jai (BEP Editor)", "Jayanth", "Roshan", "Saksham (CF Editor)", "Vasudevan (AEP Editor)", "Vinay", "Yashaswi"].sort() },
+  { year: 2016, members: ["Anuvind", "Ardra", "Aswin (BEP Editor)", "Divya (AEP Editor)", "Mamallan (Chief Designer)", "Mustansir (TFP Editor)", "Naveen (CF Editor)", "Swarup", "Vidhi (OEP Editor)"].sort() },
+  { year: 2015, members: ["Anurup (BEP Editor)", "Deepak", "Devanshu", "Gokul", "Nabeel (CF Editor)", "Samksha (AEP Editor)", "Sneha (OEP Editor)", "Vaswani", "Vighnesh (TFP Editor)", "Vivek"].sort() },
+  { year: 2014, members: ["Gautam (AEP Editor)", "Karan (CF Editor)", "Lalit (TFP Editor)", "Niharika (OEP Editor)", "Pranav (BEP Editor)", "Pranjali", "Prayaag", "Rishabh", "Saylee (OEP Editor)", "Shreya", "Sibesh", "Tushar"].sort() },
+  { year: 2013, members: ["Akhilesh", "Anirudh", "Danish (CF Editor)", "Deeksha", "Devina (OEP Editor)", "Gayatri (AEP Editor)", "Lasya", "Manesh", "Sanket (TFP Editor)", "Shubham", "Vishal (BEP Editor)"].sort() },
+  { year: 2012, members: ["Ananth", "Anish (AEP Editor)", "Archit", "Madhusudan", "Pratik", "Rahul (BEP Editor)", "Rusheen (OEP Editor)", "Soumya (CF Editor)", "Srishti", "Tanay", "Tanmayee", "Vijay (TFP Editor)"].sort() }
 ];
 
 const StatCard = ({ label, value, icon, delay }) => (
@@ -138,7 +137,6 @@ const AboutPage = () => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   useEffect(() => {
-    // Attempt to fetch fresh data, but we use the hardcoded fallback regardless
     axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/members/`)
       .then(res => {
         const dataArr = Array.isArray(res.data) ? res.data : (res.data.results || []);
@@ -151,6 +149,9 @@ const AboutPage = () => {
             else acc.push({ year: member.year, members: [display] });
             return acc;
           }, []);
+          
+          // Sort both the year groups and the members within them
+          grouped.forEach(g => g.members.sort());
           grouped.sort((a, b) => b.year - a.year);
           setMemberData(grouped);
         }
