@@ -9,6 +9,7 @@ import requests
 from rest_framework import viewsets, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from .models import Article, ContactMessage, Member, Issue
 from .serializers import ArticleSerializer, ContactMessageSerializer, MemberSerializer, IssueSerializer
 
 def get_google_drive_stream(url):
