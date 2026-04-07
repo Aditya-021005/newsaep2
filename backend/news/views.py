@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.conf import settings
 from django.http import HttpResponse, StreamingHttpResponse, JsonResponse, FileResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 import os
@@ -42,6 +43,7 @@ class ContactMessageViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+@xframe_options_exempt
 def proxy_pdf(request):
     """
     Proxies a PDF from a remote OR local URL to bypass CORS.

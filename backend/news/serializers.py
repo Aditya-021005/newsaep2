@@ -8,9 +8,14 @@ class ArticleImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image_url', 'caption']
     
     def get_image_url(self, obj):
-        if obj.image_file:
-            return obj.image_file.url
-        return None
+        if not obj.image_file:
+            return None
+            
+        url = obj.image_file.url
+        if '://' in url:
+            from urllib.parse import urlparse
+            url = urlparse(url).path
+        return url
 
 class ArticleSerializer(serializers.ModelSerializer):
     images = ArticleImageSerializer(many=True, read_only=True)
@@ -22,8 +27,17 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.image_file:
-            return obj.image_file.url
-        return obj.image_url
+            url = obj.image_file.url
+        else:
+            url = obj.image_url
+            
+        if url and '://' in url:
+            # Check if it's our own domain or an external one (like Cloudinary)
+            # If it's ours, make it relative. If it's Cloudinary, keep it as is.
+            if 'cloudinary' not in url:
+                from urllib.parse import urlparse
+                url = urlparse(url).path
+        return url
 
 class IssueSerializer(serializers.ModelSerializer):
     pdf_url = serializers.SerializerMethodField()
@@ -45,14 +59,24 @@ class IssueSerializer(serializers.ModelSerializer):
         if not obj.pdf_file:
             return None
         
-        # Use a relative path to avoid "Mixed Content (canceled)" errors
-        # the browser will automatically use the correct domain/protocol of the current page.
-        return f"/api/proxy-pdf/?url={obj.pdf_file.url}"
+        # Ensure the URL is just the path part to ensure our proxy doesn't try to loop back via IP
+        url = obj.pdf_file.url
+        if '://' in url:
+            # If it's an absolute URL (e.g. http://13.60.197.21/media/...), extract just the path
+            from urllib.parse import urlparse
+            url = urlparse(url).path
+            
+        return f"/api/proxy-pdf/?url={url}"
 
     def get_thumbnail_url(self, obj):
-        if obj.thumbnail:
-            return obj.thumbnail.url
-        return None
+        if not obj.thumbnail:
+            return None
+            
+        url = obj.thumbnail.url
+        if '://' in url:
+            from urllib.parse import urlparse
+            url = urlparse(url).path
+        return url
 
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
