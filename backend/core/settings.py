@@ -64,8 +64,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'CONN_MAX_AGE': 600,  # Keep connections alive for 10 minutes
+        'NAME': '/app/data/db.sqlite3',
+        'CONN_MAX_AGE': 600,
     }
 }
 AUTH_PASSWORD_VALIDATORS = [
