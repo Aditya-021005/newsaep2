@@ -67,8 +67,20 @@ def proxy_pdf(request):
             response['Access-Control-Allow-Origin'] = '*'
             response['Content-Disposition'] = 'inline'
             response['X-Frame-Options'] = 'ALLOWALL'
-            response['Cache-Control'] = 'public, max-age=86400'  # Cache for 1 day
+            response['Cache-Control'] = 'public, max-age=86400'
             return response
+            
+        # If it doesn't exist at the exact path, try a recursive-style search for the basename
+        # This handles cases where Django storage might have nested the file unexpectedly
+        filename = os.path.basename(relative_path)
+        for root, dirs, files in os.walk(settings.MEDIA_ROOT):
+            if filename in files:
+                found_path = os.path.join(root, filename)
+                response = FileResponse(open(found_path, 'rb'), content_type='application/pdf')
+                response['Access-Control-Allow-Origin'] = '*'
+                response['Content-Disposition'] = 'inline'
+                response['X-Frame-Options'] = 'ALLOWALL'
+                return response
 
     # Fallback to HTTP proxying for relative paths and external URLs (e.g. Cloudinary)
     if target_url.startswith('/'):
