@@ -14,14 +14,27 @@ from .serializers import ArticleSerializer, ContactMessageSerializer, MemberSeri
 
 def get_google_drive_stream(url):
     """
-    Handles Google Drive 'too large to scan' warnings by automatically
-    extracting the confirmation token and retrying the download.
+    High-resiliency downloader for Google Drive to bypass Sign-In screens
+    and 'too large to scan' warnings.
     """
     session = requests.Session()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
     
+    # --- Option B: If we have an API Key, use the official API endpoint ---
+    if hasattr(settings, 'GOOGLE_DRIVE_API_KEY') and settings.GOOGLE_DRIVE_API_KEY:
+        import re
+        file_id_match = re.search(r'id=([0-9A-Za-z_-]+)', url)
+        if not file_id_match:
+            file_id_match = re.search(r'/file/d/([0-9A-Za-z_-]+)', url)
+            
+        if file_id_match:
+            file_id = file_id_match.group(1)
+            api_url = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={settings.GOOGLE_DRIVE_API_KEY}"
+            return session.get(api_url, headers=headers, stream=True, timeout=30)
+    
+    # --- Option A: Browser-spoofing and token extraction (Fallback) ---
     # 1. First attempt to get the download (Google might show a warning page)
     response = session.get(url, headers=headers, stream=True, timeout=15)
     

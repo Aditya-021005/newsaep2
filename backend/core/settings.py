@@ -129,3 +129,6 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # Upload limits
 DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
+
+# Google Drive API Support (Option B)
+GOOGLE_DRIVE_API_KEY = os.environ.get('GOOGLE_DRIVE_API_KEY')
