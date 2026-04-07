@@ -154,7 +154,7 @@ const AboutPage = () => {
             <h1 className="font-serif text-6xl md:text-9xl font-bold tracking-tighter text-white mb-8">
               THE TEAM
             </h1>
-            <div className="w-16 h-px bg-white/20" />
+            <div className="w-16 h-px bg-white/20 mx-auto" />
           </motion.div>
         </header>
 
