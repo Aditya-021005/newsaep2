@@ -4,12 +4,12 @@ const StandardPDFViewer = ({ pdfUrl, title }) => {
   if (!pdfUrl) return null;
 
   return (
-    <div className="flex flex-col w-full h-full max-w-5xl mx-auto bg-neutral-900 border border-white/10 shadow-2xl overflow-hidden rounded-lg">
-      <div className="bg-neutral-800 p-4 border-b border-white/5 flex items-center justify-between">
+    <div className="flex flex-col w-full h-[85vh] md:max-w-7xl mx-auto bg-neutral-900 border border-white/10 shadow-2xl overflow-hidden rounded-lg">
+      <div className="bg-neutral-800 p-4 border-b border-white/5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
           <span className="text-[10px] tracking-widest uppercase text-white/40 font-mono">
-            Native Decryption Protocol: {title}
+            Secure Dispatch Protocol: {title}
           </span>
         </div>
         <div className="flex gap-4">
@@ -21,17 +21,10 @@ const StandardPDFViewer = ({ pdfUrl, title }) => {
             >
                 External View
             </a>
-            <a 
-                href={pdfUrl} 
-                download
-                className="text-[9px] tracking-widest uppercase text-white/60 hover:text-white transition-colors border-b border-white/10"
-            >
-                Download
-            </a>
         </div>
       </div>
       
-      <div className="flex-1 h-[80vh] bg-neutral-950 relative">
+      <div className="flex-1 bg-neutral-950 relative overflow-hidden">
         {/* Loading Indicator behind Iframe */}
         <div className="absolute inset-0 flex items-center justify-center -z-10">
              <div className="flex flex-col items-center gap-4 text-white/10">
@@ -41,9 +34,8 @@ const StandardPDFViewer = ({ pdfUrl, title }) => {
         </div>
         
         <iframe 
-          src={`${pdfUrl}#toolbar=1&navpanes=0&scrollbar=1`}
-          className="w-full h-full border-none block"
-          style={{ minHeight: '100%' }}
+          src={`${pdfUrl}#view=FitH&toolbar=1&navpanes=0&scrollbar=1`}
+          className="absolute inset-0 w-full h-full border-none"
           title="PDF Content"
         />
       </div>

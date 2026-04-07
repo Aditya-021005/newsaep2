@@ -25,17 +25,31 @@ def get_google_drive_stream(url):
     # 1. First attempt to get the download (Google might show a warning page)
     response = session.get(url, headers=headers, stream=True, timeout=15)
     
-    # 2. Check if we have a confirmation token in cookies or page content
+    # 2. Check if we have a confirmation token in cookies
     confirm_token = None
     for key, value in session.cookies.items():
         if key.startswith('download_warning'):
             confirm_token = value
             break
             
+    # 3. If no cookie, check the HTML body for the confirm token (common for large files)
+    if not confirm_token:
+        try:
+            # We need to read a bit of the content to find the token
+            # But not too much to avoid memory issues with large PDFs
+            # Google's warning page is small HTML
+            content_snippet = response.content.decode('utf-8', errors='ignore')
+            import re
+            match = re.search(r'confirm=([0-9A-Za-z_]+)', content_snippet)
+            if match:
+                confirm_token = match.group(1)
+        except Exception:
+            pass
+
     if confirm_token:
         # Re-request with the confirmation token
         url = f"{url}&confirm={confirm_token}"
-        return session.get(url, headers=headers, stream=True, timeout=20)
+        return session.get(url, headers=headers, stream=True, timeout=30)
         
     return response
 
