@@ -53,19 +53,30 @@ class IssueSerializer(serializers.ModelSerializer):
             'published_date',
             'pdf_url',
             'thumbnail_url',
+            'pdf_external_url',
         ]
 
     def get_pdf_url(self, obj):
-        if not obj.pdf_file:
+        # Priority 1: External URL (like Google Drive)
+        url = obj.pdf_external_url
+        
+        # Priority 2: Local Upload
+        if not url and obj.pdf_file:
+            url = obj.pdf_file.url
+            
+        if not url:
             return None
         
-        # Ensure the URL is just the path part to ensure our proxy doesn't try to loop back via IP
-        url = obj.pdf_file.url
+        # Ensure the URL is just the path part for local files to avoid proxy loops
         if '://' in url:
-            # If it's an absolute URL (e.g. http://13.60.197.21/media/...), extract just the path
-            from urllib.parse import urlparse
-            url = urlparse(url).path
-            
+            # Check if it's our own domain or an external one (like Google Drive/Cloudinary)
+            # We proxy EVERYTHING via our local proxy to avoid CORS/Mixed Content
+            # but we need to pass the full URL to the proxy if it's remote.
+            pass # Keep full URL for remote
+        else:
+            # If it's a relative path, keep it relative for the proxy
+            pass
+
         return f"/api/proxy-pdf/?url={url}"
 
     def get_thumbnail_url(self, obj):
