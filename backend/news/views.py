@@ -164,7 +164,7 @@ def proxy_pdf(request):
         response.raise_for_status()
         
         proxy_response = StreamingHttpResponse(
-            response.iter_content(chunk_size=65536),  # Larger chunks for performance
+            response.iter_content(chunk_size=262144),  # 256KB chunks for faster transfer
             content_type=response.headers.get('Content-Type', 'application/pdf')
         )
         
