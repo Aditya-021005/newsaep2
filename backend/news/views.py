@@ -97,7 +97,6 @@ class ContactMessageViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-@method_decorator(cache_page(60 * 60), name='dispatch')
 @xframe_options_exempt
 def proxy_pdf(request):
     """
