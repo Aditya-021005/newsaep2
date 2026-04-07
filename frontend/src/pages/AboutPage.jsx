@@ -3,6 +3,24 @@ import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import NavigationalChart from '../components/NavigationalChart';
+
+// --- HARDCODED TEAM DATA (Showcase-Safe) ---
+const HARDCODED_TEAM = [
+  { year: 2024, members: ["ADITI BARAL", "ABHIRUP TAPADAR", "ANIKA TYAGI", "DARSH VIKESHKUMAR PATEL", "HARIVANSH MEHTA", "SAUMYA GOYAL", "TANVI GANGAKHEDKAR", "SHIREEN BANERJEE KAR", "LATIKA ANAND", "JAYANT GUPTA", "PARASMAY ACHARYA", "PRANEET RAJ LINGAMALLU", "RAAFEY AZIZ", "SOHAM SAXENA", "TANMAY ARORA", "ADITYA "] },
+  { year: 2023, members: ["Gawade (EPC Editor)", "Ishita (BEP Editor)", "Kalyani (CF Editor)", "Kedar (Chief Designer)", "Keerthi (OEP Editor)", "Kuhoo", "Kunal", "Laavanya", "Laxman", "Moshajjar", "Shreya (TFP Editor)", "Snata", "Vamsi"] },
+  { year: 2022, members: ["Adhvaith", "Aniruddha (Chief Designer)", "Dash", "Esha (BEP Editor)", "Garvit", "Harsh (OEP Editor)", "Ishaan", "Nishit", "Patiala (CF Editor)", "Shivansh (TFP Editor)", "Shreyas", "Stuti (EPC Editor)", "Tarun", "Vivegan"] },
+  { year: 2021, members: ["Aditi C.", "Aditi M.", "Aditya (EPC Editor)", "Akshatha (OEP Editor)", "Anantshree", "Gowrav", "Harshita (BEP Editor)", "Iyer (TFP Editor)", "Kavya", "Krishnam", "Navin", "Samarth", "Sury (Chief Designer)", "Vidit", "Yash"] },
+  { year: 2020, members: ["Aarjav (BEP Editor)", "Adaa (OEP Editor)", "Anurag", "Anushka (TFP Editor)", "Avi", "Keshav", "Mizaan", "Nandinee", "Riya (EPC Editor)", "Sahaj (Media Head)", "Shaz (CF Editor)", "Zehaan"] },
+  { year: 2019, members: ["Abhigya", "Advait", "Ani", "Anuneet", "Ashutosh (Chief Designer)", "Ayushmaan (Fest Press Editor)", "Dash", "Digvijay (CF Editor)", "Kumaraditya (Media Head)", "Parimi (TFP Editor)", "Saksham", "Siddharth", "Tejas (EPC Editor)", "Ved"] },
+  { year: 2018, members: ["Adit", "Chiraag (EPC Editor)", "Effy", "Gandhar (BEP Editor)", "George", "Hamza (Chief Designer)", "Pranav", "Sabhya (OEP Editor)", "Sarthak", "Shreyasi (TFP Editor)", "Utkarsh (CF Editor)"] },
+  { year: 2017, members: ["Abhinav (TFP Editor)", "Anirudh (OEP Editor)", "Archith", "Aswathy", "Debarpan (Chief Designer)", "Jai (BEP Editor)", "Jayanth", "Roshan", "Saksham (CF Editor)", "Vasudevan (EPC Editor)", "Vinay", "Yashaswi"] },
+  { year: 2016, members: ["Anuvind", "Ardra", "Aswin (BEP Editor)", "Divya (EPC Editor)", "Mamallan (Chief Designer)", "Mustansir (TFP Editor)", "Naveen (CF Editor)", "Swarup", "Vidhi (OEP Editor)"] },
+  { year: 2015, members: ["Anurup (BEP Editor)", "Deepak", "Devanshu", "Gokul", "Nabeel (CF Editor)", "Samksha (EPC Editor)", "Sneha (OEP Editor)", "Vaswani", "Vighnesh (TFP Editor)", "Vivek"] },
+  { year: 2014, members: ["Gautam (EPC Editor)", "Karan (CF Editor)", "Lalit (TFP Editor)", "Niharika (OEP Editor)", "Pranav (BEP Editor)", "Pranjali", "Prayaag", "Rishabh", "Saylee (OEP Editor)", "Shreya", "Sibesh", "Tushar"] },
+  { year: 2013, members: ["Akhilesh", "Anirudh", "Danish (CF Editor)", "Deeksha", "Devina (OEP Editor)", "Gayatri (EPC Editor)", "Lasya", "Manesh", "Sanket (TFP Editor)", "Shubham", "Vishal (BEP Editor)"] },
+  { year: 2012, members: ["Ananth", "Anish (EPC Editor)", "Archit", "Madhusudan", "Pratik", "Rahul (BEP Editor)", "Rusheen (OEP Editor)", "Soumya (CF Editor)", "Srishti", "Tanay", "Tanmayee", "Vijay (TFP Editor)"] }
+];
+
 const StatCard = ({ label, value, icon, delay }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -20,8 +38,10 @@ const StatCard = ({ label, value, icon, delay }) => (
     </span>
   </motion.div>
 );
+
 const CrewOverlay = ({ isOpen, onClose, memberData }) => {
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
+  
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -31,8 +51,10 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
     }
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
+
   const nextYear = () => setCurrentYearIndex(p => (p + 1) % memberData.length);
   const prevYear = () => setCurrentYearIndex(p => (p - 1 + memberData.length) % memberData.length);
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -109,27 +131,35 @@ const CrewOverlay = ({ isOpen, onClose, memberData }) => {
     document.body
   );
 };
+
 const AboutPage = () => {
-  const [memberData, setMemberData] = useState([]);
-  const [totalMembers, setTotalMembers] = useState(0);
+  const [memberData, setMemberData] = useState(HARDCODED_TEAM);
+  const [totalMembers, setTotalMembers] = useState(156);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
   useEffect(() => {
+    // Attempt to fetch fresh data, but we use the hardcoded fallback regardless
     axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/members/`)
       .then(res => {
         const dataArr = Array.isArray(res.data) ? res.data : (res.data.results || []);
-        setTotalMembers(res.data?.count || dataArr.length || 0);
-        const grouped = dataArr.reduce((acc, member) => {
-          const display = member.role ? `${member.name} (${member.role})` : member.name;
-          const group = acc.find(g => g.year === member.year);
-          if (group) group.members.push(display);
-          else acc.push({ year: member.year, members: [display] });
-          return acc;
-        }, []);
-        grouped.sort((a, b) => b.year - a.year);
-        setMemberData(grouped);
+        if (dataArr.length > 0) {
+          setTotalMembers(res.data?.count || dataArr.length || 0);
+          const grouped = dataArr.reduce((acc, member) => {
+            const display = member.role ? `${member.name} (${member.role})` : member.name;
+            const group = acc.find(g => g.year === member.year);
+            if (group) group.members.push(display);
+            else acc.push({ year: member.year, members: [display] });
+            return acc;
+          }, []);
+          grouped.sort((a, b) => b.year - a.year);
+          setMemberData(grouped);
+        }
       })
-      .catch(err => console.error('Failed to fetch crew members:', err));
+      .catch(err => {
+        console.warn('Backend unavailable, using hardcoded team history.');
+      });
   }, []);
+
   return (
     <div className="min-h-screen pt-32 pb-32 px-6">
       <div className="container mx-auto max-w-5xl">
@@ -144,6 +174,7 @@ const AboutPage = () => {
             <div className="w-16 h-px bg-white/20" />
           </motion.div>
         </header>
+
         <section className="mb-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -167,13 +198,15 @@ const AboutPage = () => {
             </button>
           </motion.div>
         </section>
+
         <section className="mb-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatCard label="Total Members" value={totalMembers > 0 ? totalMembers : "..."} icon="⌘" delay={0} />
+            <StatCard label="Total Members" value={totalMembers} icon="⌘" delay={0} />
             <StatCard label="Publications" value="850+" icon="◈" delay={0.1} />
             <StatCard label="Active Status" value="Online" icon="○" delay={0.2} />
           </div>
         </section>
+
         <section>
           <div className="flex items-center gap-6 mb-8">
             <span className="text-[10px] tracking-[0.4em] uppercase text-white font-bold">
@@ -194,4 +227,5 @@ const AboutPage = () => {
     </div>
   );
 };
+
 export default AboutPage;
