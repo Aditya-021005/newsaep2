@@ -41,6 +41,7 @@ class IssueSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'issue_group',
             'event_category',
             'event_year',
             'published_date',

@@ -58,6 +58,7 @@ class Issue(models.Model):
     title = models.CharField(max_length=255, db_index=True)
     event_category = models.CharField(max_length=20, choices=EVENT_CHOICES, db_index=True)
     event_year = models.IntegerField(db_index=True)
+    issue_group = models.CharField(max_length=255, blank=True, db_index=True, help_text="Common name for a group of issues (e.g. Day 1 Dispatches)")
     pdf_file = models.FileField(upload_to='issues/pdfs/', storage=pdf_storage if not hasattr(models.fields.files, 'FieldFile') else None, blank=True, null=True) 
     pdf_external_url = models.URLField(max_length=500, blank=True, null=True, help_text="Direct link to a PDF (e.g. Google Drive direct link)")
     thumbnail = models.ImageField(upload_to='issues/thumbnails/', blank=True, null=True)
@@ -67,6 +68,7 @@ class Issue(models.Model):
         indexes = [
             models.Index(fields=['-event_year', '-published_date']),
             models.Index(fields=['event_category', 'event_year']),
+            models.Index(fields=['issue_group']),
         ]
         ordering = ['-event_year', '-published_date']
 
