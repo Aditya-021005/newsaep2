@@ -8,14 +8,16 @@ class ArticleImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image_url', 'caption']
     
     def get_image_url(self, obj):
-        if not obj.image_file:
+        try:
+            if not obj.image_file:
+                return None
+            url = obj.image_file.url
+            if '://' in url:
+                from urllib.parse import urlparse
+                url = urlparse(url).path
+            return url
+        except Exception:
             return None
-            
-        url = obj.image_file.url
-        if '://' in url:
-            from urllib.parse import urlparse
-            url = urlparse(url).path
-        return url
 
 class ArticleSerializer(serializers.ModelSerializer):
     images = ArticleImageSerializer(many=True, read_only=True)
@@ -30,11 +32,14 @@ class ArticleSerializer(serializers.ModelSerializer):
         ]
     
     def get_image_url(self, obj):
-        url = obj.image_file.url if obj.image_file else obj.image_url
-        if url and '://' in url:
-            from urllib.parse import urlparse
-            url = urlparse(url).path
-        return url
+        try:
+            url = obj.image_file.url if obj.image_file else obj.image_url
+            if url and '://' in url:
+                from urllib.parse import urlparse
+                url = urlparse(url).path
+            return url
+        except Exception:
+            return obj.image_url
 
 class IssueSerializer(serializers.ModelSerializer):
     pdf_url = serializers.SerializerMethodField()
