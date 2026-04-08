@@ -32,13 +32,21 @@ class Article(models.Model):
     # New filterable fields
     event_category = models.CharField(max_length=20, choices=EVENT_CHOICES, default='Apogee', db_index=True)
     event_year = models.IntegerField(default=2024, db_index=True)
+    is_hero = models.BooleanField(default=False, db_index=True, help_text="Set to true to feature this article as a hero. Only one article can be a hero at a time.")
 
     class Meta:
         indexes = [
             models.Index(fields=['-published_date']),
             models.Index(fields=['event_category', 'event_year']),
+            models.Index(fields=['is_hero']),
         ]
         ordering = ['-published_date']
+
+    def save(self, *args, **kwargs):
+        if self.is_hero:
+            # Unset is_hero for all other articles
+            Article.objects.filter(is_hero=True).exclude(pk=self.pk).update(is_hero=False)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

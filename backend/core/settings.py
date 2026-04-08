@@ -64,7 +64,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.environ.get('DB_PATH', '/app/data/db.sqlite3' if os.path.exists('/app/data') else BASE_DIR / 'db.sqlite3'),
         'CONN_MAX_AGE': 600,
     }
 }

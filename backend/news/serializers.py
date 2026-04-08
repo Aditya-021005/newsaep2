@@ -23,7 +23,11 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = [
+            'id', 'title', 'content', 'published_date', 'image_url', 
+            'image_file', 'summary', 'category', 'event_category', 
+            'event_year', 'is_hero', 'images'
+        ]
     
     def get_image_url(self, obj):
         url = obj.image_file.url if obj.image_file else obj.image_url
