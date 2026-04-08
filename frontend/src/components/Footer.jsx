@@ -39,7 +39,7 @@ const Footer = () => {
                 EPC CHRONICLES
               </span>
               <span className="text-[10px] tracking-[0.5em] uppercase text-white/40 font-medium">
-                Official Journal of Apogee English Press
+                Official Journal of the English Press Club
               </span>
             </div>
             <p className="text-white/40 text-sm max-w-sm leading-relaxed">
@@ -92,7 +92,7 @@ const Footer = () => {
         </div>
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 text-center md:text-left">
           <span className="text-[10px] tracking-[0.3em] uppercase text-white/20">
-            © {new Date().getFullYear()} APOGEE ENGLISH PRESS. All Rights Reserved.
+            © {new Date().getFullYear()} THE ENGLISH PRESS CLUB. All Rights Reserved.
           </span>
           <div className="flex items-center gap-8">
             <span className="text-[10px] tracking-[0.3em] uppercase text-white/20 hover:text-white/40 cursor-pointer transition-colors">
