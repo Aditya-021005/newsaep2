@@ -64,9 +64,8 @@ const PDFFlipbook = ({ pdfUrl, title, event, year, onFallbackTriggered }) => {
     console.error("PDF Flipbook Load Error:", error);
     setLoadError(error.message);
     setLoading(false);
-    // Auto-suggest fallback after a short delay if error occurs
     if (onFallbackTriggered) {
-        setTimeout(onFallbackTriggered, 1500);
+        onFallbackTriggered();
     }
   };
 
@@ -85,23 +84,7 @@ const PDFFlipbook = ({ pdfUrl, title, event, year, onFallbackTriggered }) => {
   if (!pdfUrl) return null;
 
   if (loadError) {
-      return (
-          <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-12 bg-neutral-900 border border-white/5 mx-auto max-w-2xl rounded-2xl">
-              <div className="w-12 h-12 border border-red-500/20 rounded-full flex items-center justify-center mb-6">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              </div>
-              <h3 className="text-white font-serif text-2xl font-bold italic mb-4">Transmission Fragmented</h3>
-              <p className="text-white/40 text-[10px] tracking-widest uppercase mb-8 max-w-md">
-                  The host server may be restricting direct archive access.
-              </p>
-              <button 
-                onClick={onFallbackTriggered}
-                className="px-12 py-4 bg-white text-black font-bold text-[10px] tracking-[0.4em] uppercase hover:bg-neutral-200 transition-all shadow-xl"
-              >
-                  Open Standard Viewer
-              </button>
-          </div>
-      );
+      return null;
   }
 
   return (
