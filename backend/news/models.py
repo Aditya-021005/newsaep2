@@ -80,6 +80,22 @@ class Issue(models.Model):
         ]
         ordering = ['-event_year', '-published_date']
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.pdf_file and not self.thumbnail and fitz:
+            try:
+                pdf_path = self.pdf_file.path
+                if os.path.exists(pdf_path):
+                    doc = fitz.open(pdf_path)
+                    page = doc.load_page(0)
+                    pix = page.get_pixmap(dpi=150)
+                    img_data = pix.tobytes("png")
+                    filename = f"thumb_{self.id}.png"
+                    self.thumbnail.save(filename, ContentFile(img_data), save=False)
+                    super().save(update_fields=['thumbnail'])
+            except Exception as e:
+                print(f"Error generating thumbnail: {e}")
+
     def __str__(self):
         return f"{self.event_category} {self.event_year} - {self.title}"
 

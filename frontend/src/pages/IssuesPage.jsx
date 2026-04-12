@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import PDFFlipbook from '../components/PDFFlipbook';
 import StandardPDFViewer from '../components/StandardPDFViewer';
 import CornerAccents from '../components/CornerAccents';
 
@@ -16,7 +15,6 @@ const IssuesPage = ({ onOpenSidebar }) => {
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedIssue, setSelectedIssue] = useState(null);
-  const [viewMode, setViewMode] = useState('flipbook'); // 'flipbook' or 'standard'
 
   useEffect(() => {
     fetchIssues();
@@ -61,7 +59,6 @@ const IssuesPage = ({ onOpenSidebar }) => {
 
   const closeIssue = () => {
     setSelectedIssue(null);
-    setViewMode('flipbook'); // Reset for next time
   };
 
   const closeGroup = () => {
@@ -259,20 +256,6 @@ const IssuesPage = ({ onOpenSidebar }) => {
                     </div>
                     
                     <div className="flex items-center gap-6">
-                        <div className="hidden md:flex bg-white/5 border border-white/10 p-1 rounded-full">
-                            <button 
-                                onClick={() => setViewMode('flipbook')}
-                                className={`px-4 py-2 rounded-full text-[9px] tracking-widest uppercase font-bold transition-all ${viewMode === 'flipbook' ? 'bg-white text-black' : 'text-white/40'}`}
-                            >
-                                Magazine
-                            </button>
-                            <button 
-                                onClick={() => setViewMode('standard')}
-                                className={`px-4 py-2 rounded-full text-[9px] tracking-widest uppercase font-bold transition-all ${viewMode === 'standard' ? 'bg-white text-black' : 'text-white/40'}`}
-                            >
-                                Standard
-                            </button>
-                        </div>
                         <button 
                             onClick={closeIssue}
                             className="w-16 h-16 rounded-full bg-white text-black text-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all shadow-2xl z-[2001]"
@@ -283,20 +266,10 @@ const IssuesPage = ({ onOpenSidebar }) => {
                 </div>
                 
                 <div className="flex-1 flex items-center justify-center overflow-x-hidden p-4">
-                    {viewMode === 'flipbook' ? (
-                        <PDFFlipbook 
-                            pdfUrl={selectedIssue.pdf_url} 
-                            title={selectedIssue.title}
-                            event={selectedIssue.event_category}
-                            year={selectedIssue.event_year}
-                            onFallbackTriggered={() => setViewMode('standard')}
-                        />
-                    ) : (
-                        <StandardPDFViewer 
-                            pdfUrl={selectedIssue.pdf_url}
-                            title={selectedIssue.title}
-                        />
-                    )}
+                    <StandardPDFViewer 
+                        pdfUrl={selectedIssue.pdf_url}
+                        title={selectedIssue.title}
+                    />
                 </div>
                 
                 <div className="p-8 border-t border-white/10 flex items-center justify-center gap-12 text-[10px] tracking-[0.3em] uppercase text-white/20 shrink-0">
